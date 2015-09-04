@@ -3,7 +3,7 @@
 ## Summary
 Solar insolation directly affects stream temperature and the primary productivity of streams.   Eco Logical Research, Inc. (ELR) has explored using areal solar insolation for the solar input parameter. South Fork Research, Inc. (SFR) is investigating methods for modeling solar insolation of streams in the Columbia Basin. Specifically, SFR seeks to develop a methodology for modeling solar insolation that will more closely emulate the effects of shading from riparian vegetation and topography.  The [Columbia Habitat Monitoring Program](https://www.champmonitoring.org/) (CHaMP) protocol requires the collection of solar insolation data during stream surveys, however, collecting field-based solar insolation measurements comprehensively for the entire stream network of the Columbia Basin is resource prohibitive.  Developing a spatially-explicit model to predict solar insolation for all stream networks and associated riparian buffers within the Columbia Basin will potentially provide a robust, reliable input for GPP modeling efforts, and may preclude the need for field-based data collection. 
 
-The process relies on raster data derived from the National Biomass and Carbon Dataset (NBCD) basal area-weighted canopy height dataset.  The [NBCD](http://www.whrc.org/mapping/nbcd/) was developed by the Woods Hole Research Center in 2000, and combines high-resolution inSAR data acquired by the 2000 Shuttle Radar Topography Mission (SRTM), US Forest Service Forest Inventory and Analysis (FIA) data, and remotely-sensed data from the Landsat ETM+ sensor.  The tool then combines basal-area-weighted canopy height values with bare-earth topographic values from a high-resolution digital elevation model (DEM), resulting in a relatively close approximation of stream shading, when calculating solar insolation using ESRI’s area solar radiation tool.  
+The process relies on raster data derived from the National Biomass and Carbon Dataset (NBCD) basal area-weighted canopy height dataset.  The [NBCD](http://www.whrc.org/mapping/nbcd) was developed by the Woods Hole Research Center in 2000, and combines high-resolution inSAR data acquired by the 2000 Shuttle Radar Topography Mission (SRTM), US Forest Service Forest Inventory and Analysis (FIA) data, and remotely-sensed data from the Landsat ETM+ sensor.  The tool then combines basal-area-weighted canopy height values with bare-earth topographic values from a high-resolution digital elevation model (DEM), resulting in a relatively close approximation of stream shading, when calculating solar insolation using ESRI’s area solar radiation tool.  
 
 It is recommended that prior to using this tool, the required stream network input be segmented using the SFR [Segment](http://github.com/jesselangdon/segment_tool) tool.
 
@@ -12,15 +12,24 @@ It is recommended that prior to using this tool, the required stream network inp
 * 8/22/2015 - Beta version of the Solar Streams Tool, v0.1, uploaded to Github.
 
 ## Data Input Requirements:
-* NHD+ 1:24k flowlines, segmented
-* DEM 10m<sup>2</sup>
-* USGS HUC 4 polygon
-* Bankfull polygons
-* NBDC canopy height
+* **Study basin (HUC polygon)**: A polygon feature class that encompasses the area of analysis. Typically a hydrologic unit or watershed.
+* **Bare earth DEM**: Digital elevation or digital terrain model as a raster dataset, representing bare earth topology.
+* **Canopy height raster**: Digital elevation representing vegetation or canopy heights.  The NBCD BAW canopy height dataset is highly recommended for this input parameter.
+* **Stream network feature class**: The polyline feature class that will contain the results of the predicted solar insolation modeling.  The stream network should already been segmented, using the [Segment Stream Tool](https://github.com/jesselangdon/segment_tool).
+* **Bankful feature class**: This dataset represents bankfull widths for the stream network.
+* **Output feature class**: The resulting stream network feature class that will contain the predicted solar insolation values per stream segment.
+* **Solar insolation model parameters**:
+* (Recommended settings when developing solar insolation for GPP modeling)
+* _Time configuration_: Multiple days in a year
+* _Year_: 2014 (to coincide with CHaMP SunEye monitoring data for validation purposes)
+* _Start day_: 182 (July 1st)
+* _End day_: 243 (August 31st)
+* _Day interval_: 7
+* _Hour interval_: 0.5
 
 ## Suggested User Workflow
 1. Clip all data inputs using a watershed or hydrologic unit polygon
-2. Split reaches in the stream network into segments (based on a user-supplied length interval) using the [Segment Tool](https://github.com/jesselangdon/segment_tool).
+2. Split reaches in the stream network into segments (based on a user-supplied length interval) using the [Segment Stream Tool](https://github.com/jesselangdon/segment_tool).
 
 ## Automated Processing Steps
 1. Convert stream network and bankfull polyon datasets into rasters and merge together into a single stream water surface raster.
