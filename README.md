@@ -46,6 +46,14 @@ It is recommended that prior to using this tool, the required stream network inp
 7. Calculate mean solar insolation per segmented bankfull polygons buffers.
 8. Join the resulting mean solar insolation table back to the segmented stream network.
 
+## Data Validation with CHaMP SunEye Measurements
+To validate the results of the solar insolation model, solar measurement data can be downloaded from [Columbia Habitat Monitoring Program](https://www.champmonitoring.org/) website.  Solar radiation data has been collected by CHaMP field survey crews using SunEye instruments, and this data can be compared modeled solar insolation values.
+* SunEye data must be downloaded separately per CHaMP survey site . 
+* Navigate to Watershed (Name) > Field Support > Data Check In > click the "File Upload" icon associated with the Site ID > Solar Input Photos.  Download the AverageSolarAccess.csv files.
+* Once all of the AverageSolarAccess files have been downloaded for the basin of interest, run the compile\_SunEye.py from the command line (i.e. > python compile\_SunEye.py).
+* Enter the filepath to the directory containing all of the downloaded SunEye files.
+* Enter the name of the output file.  This will be stored in the same directory as the SunEye files.
+
 ## Acknowledegments
 The Solar Streams model and tool is developed and maintained by Jesse Langdon, [South Fork Research, Inc.](http://southforkresearch.org) (SFR).
 
