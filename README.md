@@ -26,20 +26,20 @@ It is recommended that prior to using this tool, the required stream network inp
 4. Remove the stream surface raster from the NBCD canopy height raster dataset
 5. Merge canopy height raster with “bare earth” DEM.
 6. Using the merged canopy height/bare earth DEM, calculate solar insolation:
-* **Study basin (HUC polygon)**: A polygon feature class that encompasses the area of analysis. Typically a hydrologic unit or watershed.
-* **Bare earth DEM**: Digital elevation or digital terrain model as a raster dataset, representing bare earth topology.
-* **Canopy height raster**: Digital elevation representing vegetation or canopy heights.  The NBCD BAW canopy height dataset is highly recommended for this input parameter.
-* **Stream network feature class**: The polyline feature class that will contain the results of the predicted solar insolation modeling.  The stream network should already been segmented, using the [Segment Stream Tool](https://github.com/jesselangdon/segment_tool).
-* **Bankful feature class**: This dataset represents bankfull widths for the stream network.
-* **Output feature class**: The resulting stream network feature class that will contain the predicted solar insolation values per stream segment.
-* **Solar insolation model parameters**:
-* (Recommended settings when developing solar insolation for GPP modeling)
-* _Time configuration_: Multiple days in a year
-* _Year_: 2014 (to coincide with CHaMP SunEye monitoring data for validation purposes)
-* _Start day_: 182 (July 1st)
-* _End day_: 243 (August 31st)
-* _Day interval_: 7
-* _Hour interval_: 0.5
+**Study basin (HUC polygon)**: A polygon feature class that encompasses the area of analysis. Typically a hydrologic unit or watershed.
+**Bare earth DEM**: Digital elevation or digital terrain model as a raster dataset, representing bare earth topology.
+**Canopy height raster**: Digital elevation representing vegetation or canopy heights.  The NBCD BAW canopy height dataset is highly recommended for this input parameter.
+**Stream network feature class**: The polyline feature class that will contain the results of the predicted solar insolation modeling.  The stream network should already been segmented, using the [Segment Stream Tool](https://github.com/jesselangdon/segment_tool).
+**Bankful feature class**: This dataset represents bankfull widths for the stream network.
+**Output feature class**: The resulting stream network feature class that will contain the predicted solar insolation values per stream segment.
+**Solar insolation model parameters**:
+(Recommended settings when developing solar insolation for GPP modeling)
+_Time configuration_: Multiple days in a year
+_Year_: 2014 (to coincide with CHaMP SunEye monitoring data for validation purposes)
+_Start day_: 182 (July 1st)
+_End day_: 243 (August 31st)
+_Day interval_: 7
+_Hour interval_: 0.5
 
 ## Suggested User Workflow
 1. Clip all data inputs using a watershed or hydrologic unit polygon
