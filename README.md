@@ -6,7 +6,7 @@ The [Columbia Habitat Monitoring Program](https://www.champmonitoring.org/) (CHa
 
 The process relies on raster data derived from the National Biomass and Carbon Dataset (NBCD) basal area-weighted canopy height dataset.  The [NBCD](http://www.whrc.org/mapping/nbcd) was developed by the Woods Hole Research Center in 2000, and combines high-resolution inSAR data acquired by the 2000 Shuttle Radar Topography Mission (SRTM), US Forest Service Forest Inventory and Analysis (FIA) data, and remotely-sensed data from the Landsat ETM+ sensor.  The tool then combines basal-area-weighted canopy height values with bare-earth topographic values from a high-resolution digital elevation model (DEM), resulting in a relatively close approximation of stream shading, when calculating solar insolation using ESRI’s area solar radiation tool.  
 
-It is recommended that prior to using this tool, the required stream network input be segmented using the SFR [Segment](http://github.com/jesselangdon/segment_tool) tool.
+It is recommended that prior to using this tool, the required stream network input be segmented using the [Geomorphic Network and Analysis Toolbox (GNAT) Segment Stream Network](https://bitbucket.org/KellyWhitehead/geomorphic-network-and-analysis-toolbox).
 
 ## Project Status and Updates
 * 10/12/2016 - Tool updated to version 0.2
@@ -20,8 +20,9 @@ It is recommended that prior to using this tool, the required stream network inp
 * NBDC canopy height
 
 ## Method Workflow
-1. Data pre-processing steps, including segmentation of the stream network, and clipping all data inputs by HUC polygon.
-2. Convert stream network and stream area polyon datasets into rasters and merge together into a single stream water surface raster.
+1. Data pre-processing steps, including convertion all data inputs to the same coordinate system, segmentation of the stream network, and clipping all data inputs by HUC polygon.
+_Automated_
+2. Convert stream network and stream area polyon vector datasets into rasters and merge together into a single stream water surface raster.
 3. Convert stream water surface water raster into a polygon and split by stream segments.
 4. Remove the stream surface raster from the NBCD canopy height raster dataset
 5. Merge canopy height raster with “bare earth” DEM.
@@ -29,35 +30,27 @@ It is recommended that prior to using this tool, the required stream network inp
   * **Study basin (HUC polygon)**: A polygon feature class that encompasses the area of analysis. Typically a hydrologic unit or watershed.
   * **Bare earth DEM**: Digital elevation or digital terrain model as a raster dataset, representing bare earth topology.
   * **Canopy height raster**: Digital elevation representing vegetation or canopy heights.  The NBCD BAW canopy height dataset is highly recommended for this input parameter.
-  * **Stream network feature class**: The polyline feature class that will contain the results of the predicted solar insolation modeling.  The stream network should already been segmented, using the [Segment Stream Tool](https://github.com/jesselangdon/segment_tool).
+  * **Stream network feature class**: The polyline feature class that will contain the results of the predicted solar insolation modeling.  The stream network should already been segmented, using the [GNAT Segment Stream Network](https://bitbucket.org/KellyWhitehead/geomorphic-network-and-analysis-toolbox) tool.
   * **Stream area feature class**: This dataset represents stream surface area or each stream in the network.  As example, a bankfull polygon or NHD Area dataset could be used here.
   * **Output feature class**: The resulting stream network feature class that will contain the predicted solar insolation values per stream segment.
+  * **Scracth workspace**: File geodatabase that store temporary data produced by the tool.
   * **Solar insolation model parameters**:
-  (Recommended settings when developing solar insolation for GPP modeling)
+  (Recommended settings when developing solar insolation for ISEMP GPP modeling)
     * _Time configuration_: Multiple days in a year
     * _Year_: 2014 (to coincide with CHaMP SunEye monitoring data for validation purposes)
     * _Start day_: 182 (July 1st)
     * _End day_: 243 (August 31st)
     * _Day interval_: 7
     * _Hour interval_: 0.5
+7. Calculate mean solar insolation per segmented stream polygons using Zonal Statistics
+8. Join zonal statistics output back to segmented stream network polyline dataset
+9. Export result to new stream network polyline dataset, with solar insolation added as an attribute field.
+10. Solar insolation output has units of watt hours per square meter (WH/m<sup>2</sup>).
 
 ## Suggested User Workflow
 1. Clip all data inputs using a watershed or hydrologic unit polygon
-2. Split reaches in the stream network into segments (based on a user-supplied length interval) using the [Segment Stream Tool](https://github.com/jesselangdon/segment_tool).
-
-## Automated Processing Steps
-1. Convert stream network and bankfull polyon datasets into rasters and merge together into a single stream water surface raster.
-2. Segment bankfull polygons by stream segments.
-3. Remove the stream surface raster from the NBCD canopy height raster dataset
-4. Merge canopy height raster with “bare earth” DEM.
-5. Using the merged canopy height/bare earth DEM, calculate solar insolation:
-    a. Latitude: centroid of HUC 4
-    b. Sky size/resolution: 400
-    c. Time range: July 1 through Aug. 31
-    d. Day Interval: 7
-    e. Hour interval: 0.5
-6. Calculate mean solar insolation per segmented stream water surface polygon.
-7. Join the resulting mean solar insolation table back to the segmented stream network.
+2. Convert all inputs to the same projected coordinate systems.
+3. Split reaches in the stream network into segments of uniform length (based on a user-supplied length interval) using the [GNAT Segment Stream Network](https://bitbucket.org/KellyWhitehead/geomorphic-network-and-analysis-toolbox) tool.
 
 ## Data Validation with CHaMP SunEye Measurements
 * To validate the results of the solar insolation model, solar measurement data can be downloaded from [Columbia Habitat Monitoring Program](https://www.champmonitoring.org/) website.  Solar radiation data has been collected by CHaMP field survey crews using SunEye instruments, and this data can be compared modeled solar insolation values.
@@ -68,4 +61,4 @@ It is recommended that prior to using this tool, the required stream network inp
   * Enter the name of the output file.  This will be stored in the same directory as the SunEye files.
 
 ## Acknowledegments
-The Solar Streams model and tool is developed and maintained by Jesse Langdon, [South Fork Research, Inc.](http://southforkresearch.org) (SFR).
+The Solar Streams model and tool is developed and maintained by Jesse Langdon for [South Fork Research, Inc.](http://southforkresearch.org) (SFR).
