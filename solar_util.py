@@ -4,35 +4,6 @@
 # dependencies: ESRI arcpy module, Spatial Analyst extension
 
 import arcpy
-from arcpy.sa import *
-
-def convert_raster(in_dem, in_strm, in_strm_area, workspace_temp):
-    # convert streams and stream area polygons to a single raster dataset
-    desc = arcpy.Describe(in_dem)
-    cellSize = desc.meanCellHeight
-    in_strm_oid = arcpy.Describe(in_strm).OIDFieldName
-    in_strm_area_oid = arcpy.Describe(in_strm_area).OIDFieldName
-    arcpy.AddMessage("Converting stream polyline and area vectors to raster format...")
-    strm_ras = workspace_temp + r"\strm_ras"
-    arcpy.PolylineToRaster_conversion(in_strm, in_strm_oid, strm_ras, "", "", cellSize)
-    poly_ras = workspace_temp + r"\poly_ras"
-    arcpy.PolygonToRaster_conversion(in_strm_area, in_strm_area_oid, poly_ras, "CELL_CENTER", "", cellSize)
-    strm_poly = workspace_temp + r"\strm_poly"
-    # Create stream area polygon for summarizing solar values later
-    arcpy.RasterToPolygon_conversion(strm_ras, strm_poly, "NO_SIMPLIFY")
-    area_poly = workspace_temp + r"\area_poly"
-    arcpy.RasterToPolygon_conversion(poly_ras, area_poly, "NO_SIMPLIFY")
-    merge_poly = workspace_temp + r"\merge_poly"
-    arcpy.Merge_management(strm_poly + ";" + area_poly, merge_poly)
-    dslv_poly = workspace_temp + r"\dslv_poly"
-    arcpy.Dissolve_management(merge_poly, dslv_poly)
-    # Create stream area raster for reconditioning canopy raster data
-    arcpy.AddField_management(dslv_poly, "VAL", "SHORT")
-    arcpy.CalculateField_management(dslv_poly, "VAL", "1", "PYTHON_9.3")
-    strm_area_ras = workspace_temp + r"\strm_area_ras"
-    arcpy.PolygonToRaster_conversion(dslv_poly, "VAL", strm_area_ras, "CELL_CENTER", "", cellSize)
-
-    return dslv_poly, strm_area_ras
 
 
 def clear_inmem():
