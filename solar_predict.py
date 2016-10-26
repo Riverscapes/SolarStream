@@ -11,6 +11,7 @@
 import arcpy, os
 from arcpy.sa import *
 import solar_util as u
+import metadata
 
 arcpy.CheckOutExtension("Spatial")
 arcpy.env.overwriteOutput = True
@@ -26,7 +27,7 @@ workspace_temp = arcpy.GetParameterAsText(6)  # File geodatabase to serve as tem
 time_config = arcpy.GetParameterAsText(7) # Time period for calculating solar radiation. Required by AreaSolarRadiation.
 day_intv = arcpy.GetParameterAsText(8) # Time interval (by days) used for calculation of sky vectors.
 hour_intv = arcpy.GetParameterAsText(9)  # Time interval (by hour) used for calculating sky vectors.
-
+out_meta = arcpy.GetParameterAsText(10) # Metadata XML file (file name and directory path
 
 def raster_poly(in_dem, in_strm, in_strm_area, workspace_temp):
     # convert streams and stream area polygons to a single polygon with rasterized boundaries
@@ -56,16 +57,8 @@ def raster_poly(in_dem, in_strm, in_strm_area, workspace_temp):
 
     return dslv_poly, strm_ras, poly_ras
 
-def main(in_dem,
-         in_canopy,
-         in_stream,
-         in_strm_indx,
-         in_strm_area,
-         out_fc,
-         workspace_temp,
-         time_config,
-         day_intrvl,
-         hour_intrvl):
+
+def main(in_dem, in_canopy, in_stream, in_strm_indx, in_strm_area, out_fc, workspace_temp, time_config, day_intrvl, hour_intrvl, out_meta):
     # set environmental variables
     arcpy.env.outputCoordinateSystem = in_dem
     arcpy.env.snapRaster = in_dem
@@ -79,6 +72,21 @@ def main(in_dem,
     dem_ras = arcpy.sa.Raster(in_dem)
     dem_extent = dem_ras.extent
     arcpy.env.extent = dem_extent
+
+    # start writing metadata
+    mWriter = metadata.MetadataWriter("Predict Solar Insolation for a Stream Network", "0.2")
+    mWriter.createRun()
+    mWriter.currentRun.addParameter("Bare earth DEM", in_dem)
+    mWriter.currentRun.addParameter("Canopy height raster", in_canopy)
+    mWriter.currentRun.addParameter("Stream network feature class", in_stream)
+    mWriter.currentRun.addParameter("Stream unique ID field", in_strm_indx)
+    mWriter.currentRun.addParameter("Stream area polygon feature class", in_strm_area)
+    mWriter.currentRun.addParameter("Scratch workspace", workspace_temp)
+    mWriter.currentRun.addParameter("Time configuration", time_config)
+    mWriter.currentRun.addParameter("Day interval", day_intrvl)
+    mWriter.currentRun.addParameter("Hour interval", hour_intrvl)
+    mWriter.currentRun.addOutput("Output feature class", out_fc)
+    mWriter.currentRun.addOutput("Metadata XML file", out_meta)
 
     # solar parameters (not set by user)
     sky_size = 400
@@ -128,7 +136,6 @@ def main(in_dem,
     elev_vegtopo = Plus(veg_div, in_dem)
     elev_vegtopo.save(workspace_temp + r"\elev_vegtopo")
 
-
     # calculate mean solar radiation per bankfull buffer
     area_solar = AreaSolarRadiation(elev_vegtopo, latitude, sky_size, time_config, day_intv, hour_intv)
     area_solar.save(workspace_temp + r"\area_solar")
@@ -143,13 +150,19 @@ def main(in_dem,
     # clean up in_memory files
     u.clear_inmem()
 
+    # finalize and write metadata file
+    strToolStatus = "Success"
+    mWriter.finalizeRun(strToolStatus)
+    mWriter.writeMetadataFile(out_meta)
+
     arcpy.CheckInExtension("Spatial")
 
     return result
 
 
-main(in_dem, in_canopy, in_stream, in_strm_indx, in_strm_area, result, workspace_temp, time_config, day_intv, hour_intv)
+main(in_dem, in_canopy, in_stream, in_strm_indx, in_strm_area, result, workspace_temp, time_config, day_intv, hour_intv, out_meta)
 
+# TESTING
 # in_dem = r"C:\JL\Testing\solar\Lemhi_Full\test_20161019\elev10m_HUtest.tif"
 # in_canopy = r"C:\JL\Testing\solar\Lemhi_Full\test_20161019\nbcd_HUtest.tif"
 # in_stream = r"C:\JL\Testing\solar\Lemhi_Full\test_20161019\segments_200m_20161013.gdb\seg200m_HUtest"
