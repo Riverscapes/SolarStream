@@ -9,6 +9,7 @@ The process relies on raster data derived from the National Biomass and Carbon D
 It is recommended that prior to using this tool, the required stream network input be segmented using the [Geomorphic Network and Analysis Toolbox (GNAT) Segment Stream Network](https://bitbucket.org/KellyWhitehead/geomorphic-network-and-analysis-toolbox).
 
 ## Project Status and Updates
+* 10/26/2016 - Added metadata output
 * 10/12/2016 - Tool updated to version 0.2
 * 8/22/2015 - Beta version of the Solar Streams Tool, v0.1, uploaded to Github.
 
@@ -53,11 +54,11 @@ _Automated_
 3. Split reaches in the stream network into segments of uniform length (based on a user-supplied length interval) using the [GNAT Segment Stream Network](https://bitbucket.org/KellyWhitehead/geomorphic-network-and-analysis-toolbox) tool.
 
 ## Data Validation with CHaMP SunEye Measurements
-* To validate the results of the solar insolation model, solar measurement data can be downloaded from [Columbia Habitat Monitoring Program](https://www.champmonitoring.org/) website.  Solar radiation data has been collected by CHaMP field survey crews using SunEye instruments, and this data can be compared modeled solar insolation values.
+* To validate the results of the solar insolation model, solar measurement data can be downloaded from [Columbia Habitat Monitoring Program](https://www.champmonitoring.org/) website. Solar radiation data has been collected by CHaMP field survey crews using SunEye instruments, and this data can be compared modeled solar insolation values.
   * SunEye data must be downloaded separately per CHaMP survey site. 
-  * Navigate to Watershed (Name) > Field Support > Data Check In > click the "File Upload" icon associated with the Site ID > Solar Input Photos.  Download the AverageSolarAccess.csv files.
-  * Once all of the AverageSolarAccess files have been downloaded for the basin of interest, run the compile\_SunEye.py from the command line (i.e. > python compile\_SunEye.py).
-  * Enter the filepath to the directory containing all of the downloaded SunEye files.
+  * Navigate to Watershed (Name) > Field Support > Data Check In > click the "File Upload" icon associated with the Site ID > Solar Input Photos.  Download the all of the SkyXXDailySolarAccess.csv and SkyXXInsolation.csv files.  There should be 11 skyview samples, so 22 CSV files per site (although there may be less for some CHaMP sites).
+  * Once all of the DailySolarAccess and Insolation files have been downloaded for each CHaMP site within the basin of interest, run the compile\_SunEye.py from the command line (i.e. > python compile\_SunEye.py).
+  * Enter the filepath to the directory containing all of the CHaMP site subdirectories, each containing the downloaded SunEye CSV files.
   * Enter the name of the output file.  This will be stored in the same directory as the SunEye files.
 
 ## Acknowledegments
