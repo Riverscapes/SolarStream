@@ -100,6 +100,8 @@ def main(in_dem, in_canopy, in_stream, in_strm_indx, in_strm_area, out_fc, works
     arcpy.MakeFeatureLayer_management(tmp_stream_line, "in_strm_line_lyr")
     arcpy.MakeFeatureLayer_management(tmp_stream_poly, "in_strm_poly_lyr")
     poly_strm_area, strm_ras, poly_ras = raster_poly(in_dem, "in_strm_line_lyr", "in_strm_poly_lyr", workspace_temp)
+    arcpy.CalculateStatistics_management(strm_ras)
+    arcpy.CalculateStatistics_management(poly_ras)
     strm_ras_lyr = "strm_ras_lyr"
     poly_ras_lyr = "poly_ras_lyr"
     arcpy.MakeRasterLayer_management(strm_ras, strm_ras_lyr)
@@ -119,11 +121,11 @@ def main(in_dem, in_canopy, in_stream, in_strm_indx, in_strm_area, out_fc, works
 
     # prepare elevation data for solar radiation modeling
     arcpy.AddMessage("Calculating solar radiation...")
-    arcpy.CalculateStatistics_management(strm_ras)
-    arcpy.CalculateStatistics_management(poly_ras)
-    rcls_strm_line = Reclassify(strm_ras_lyr, "VALUE", RemapValue([[1, 1], ["NODATA", 0]]))
+    #rcls_strm_line = Reclassify(strm_ras_lyr, "VALUE", RemapValue([[1, 1], ["NODATA", 0]]))
+    rcls_strm_line = Reclassify(strm_ras, "VALUE", RemapValue([[1, 1], ["NODATA", 0]]))
     rcls_strm_line.save(workspace_temp + r"\rcls_strm_line")
-    rcls_strm_poly = Reclassify(poly_ras_lyr, "VALUE", RemapValue([[1, 1], ["NODATA", 0]]))
+    #rcls_strm_poly = Reclassify(poly_ras_lyr, "VALUE", RemapValue([[1, 1], ["NODATA", 0]]))
+    rcls_strm_poly = Reclassify(poly_ras, "VALUE", RemapValue([[1, 1], ["NODATA", 0]]))
     rcls_strm_poly.save(workspace_temp + r"\rcls_strm_poly")
     plus_rcls = Plus(rcls_strm_line, rcls_strm_poly)
     plus_rcls.save(workspace_temp + r"\plus_rcls")
