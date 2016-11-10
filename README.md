@@ -8,13 +8,6 @@ The process relies on raster data derived from the National Biomass and Carbon D
 
 It is recommended that prior to using this tool, the required stream network input be segmented using the [Geomorphic Network and Analysis Toolbox (GNAT) Segment Stream Network](https://bitbucket.org/KellyWhitehead/geomorphic-network-and-analysis-toolbox).
 
-*Recommended Model Inputs*:
-* NHD+ 1:24k flowlines, segmented
-* NED DEM 10m2
-* USGS Hydrologic Unit polygon (i.e. HUC4, HUC5)
-* Stream area polygon (i.e. bankfull or NHD Area)
-* NBDC basal-area weighted (BAW) canopy height
-
 ## Project Status and Updates
 * 11/8/2016 - Transferred repository from [jesselangdon](https://github.com/jesselangdon) to [SouthForkResearch](https://github.com/SouthForkResearch) 
 * 10/26/2016 - Added metadata output
