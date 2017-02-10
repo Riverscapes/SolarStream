@@ -5,8 +5,8 @@ import arcpy
 arcpy.env.overwriteOutput = True
 
 # constants
-RS_SUBDIRS = ["Inputs", "Realizations"] # directories in the Riverscape Project root
-RS_OUTDIRS = ["SolarRaster", "SolarVector"] # directories storing Riverscape realization outputs
+RS_SUBDIRS = ["ProjectInputs", "Realizations"] # directories in the Riverscape Project root
+RS_OUTDIRS = ["Inputs", "SolarRasterOutput", "SolarVectorOutput"] # directories storing Riverscape realization inputs/outputs
 
 HUCID_DICT = {"Asotin":"17060103",
               "Big-Navarro-Garcia (CA)":"18010108",
@@ -49,13 +49,15 @@ def copyRSFiles(from_file, out_file):
     if from_desc.dataType == "DbaseTable":
         arcpy.MakeTableView_management(from_file, "from_file_view")
         arcpy.CopyRows_management("from_file_view", out_file)
+        arcpy.Delete_management("from_file_view")
     elif from_desc.dataType == "FeatureClass" or from_desc.dataType == "ShapeFile":
         arcpy.MakeFeatureLayer_management(from_file, "from_file_lyr")
         arcpy.CopyFeatures_management("from_file_lyr", out_file)
+        arcpy.Delete_management("from_file_lyr")
     elif from_desc.dataType == "RasterDataset":
         arcpy.MakeRasterLayer_management(from_file, "from_ras_lyr")
         arcpy.CopyRaster_management("from_ras_lyr", out_file)
-
+        arcpy.Delete_management("from_ras_lyr")
 
 def getRSdirs(root, subdir_index='', outdir_index='', real_id=''):
     if subdir_index != '' and outdir_index != '':
@@ -70,4 +72,4 @@ def getHUCID(wshd_name):
 
 
 def getRealID(timestamp):
-    return "{0}{1}".format("real", timestamp)
+    return "{0}{1}".format("run", timestamp)
