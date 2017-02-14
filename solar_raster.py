@@ -5,7 +5,7 @@
 #               Surface tool relies heavily on ESRI's Area Solar Radiation tool.
 # author:		Jesse Langdon
 # dependencies: ESRI arcpy module, Spatial Analyst extension, util.py
-# version:		0.2
+# version:		0.5
 
 import arcpy
 import os
