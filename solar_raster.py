@@ -20,7 +20,7 @@ import riverscapes as rs
 arcpy.CheckOutExtension("Spatial")
 arcpy.env.overwriteOutput = True
 
-# # set input variables
+# set input variables
 in_dem = arcpy.GetParameterAsText(0) # input raster dataset represents "bare earth" topographic surface.
 in_canopy = arcpy.GetParameterAsText(1) # input raster dataset represents vegetation or canopy height
 in_stream = arcpy.GetParameterAsText(2) # segmented stream network as vector dataset.
@@ -34,7 +34,8 @@ rs_bool = arcpy.GetParameterAsText(9) # boolean parameter indicates Riverscape p
 wshd_name = arcpy.GetParameterAsText(10) # name of project watershed. required for Riverscape XML file.
 rs_proj_name = arcpy.GetParameterAsText(11) # Riverscapes project name
 rs_real_name = arcpy.GetParameterAsText(12) # Riverscapes realization name
-rs_dir = arcpy.GetParameterAsText(13) # directory where Riverscape project files will be written.=
+rs_dir = arcpy.GetParameterAsText(13) # directory where Riverscape project files will be written.
+
 
 # get output directory
 out_dir = os.path.dirname(result)
@@ -129,7 +130,7 @@ def main(in_dem,
 
     # initiate generic metadata XML object
     time_stamp = time.strftime("%Y%m%d%H%M")
-    out_xml = os.path.join(out_dir, "{0}_{1}.{2}".format("meta_polystat", time_stamp, "xml"))
+    out_xml = os.path.join(out_dir, "{0}_{1}.{2}".format("meta_solarRaster", time_stamp, "xml"))
     mWriter = meta_sfr.MetadataWriter("Calculate Solar Insolation for a Stream Network", "0.1")
     mWriter.createRun()
     mWriter.currentRun.addParameter("DEM raster", in_dem)
@@ -196,30 +197,37 @@ def main(in_dem,
     area_solar.save(out_raster)
     arcpy.AddMessage("Tool output saved to " + out_raster)
 
-    # Riverscapes output, including project XML and data files
+    # Riverscapes project processing
     if rs_bool == "true":
         arcpy.AddMessage("Exporting as a Riverscapes project...")
         real_id = rs.getRealID(time_stamp)
-        rs_dem_path = os.path.join(rs.getRSdirs(rs_dir, 0), in_dem_name)
-        rs_canopy_path = os.path.join(rs.getRSdirs(rs_dir, 1, 0, real_id), in_canopy_name)
-        rs_stream_path = os.path.join(rs.getRSdirs(rs_dir, 1, 0, real_id), in_stream_name)
-        rs_strm_area_path = os.path.join(rs.getRSdirs(rs_dir, 1, 0, real_id), in_strm_area_name)
-        rs_solar_path = os.path.join(rs.getRSdirs(rs_dir, 1, 1, real_id), out_raster_name)
+        # copy input/output data to Riverscapes project directories
+        abs_dem_path = os.path.join(rs.getRSDirAbs(rs_dir, 0), in_dem_name)
+        abs_canopy_path = os.path.join(rs.getRSDirAbs(rs_dir, 1, 0, real_id), in_canopy_name)
+        abs_stream_path = os.path.join(rs.getRSDirAbs(rs_dir, 1, 0, real_id), in_stream_name)
+        abs_strm_area_path = os.path.join(rs.getRSDirAbs(rs_dir, 1, 0, real_id), in_strm_area_name)
+        abs_solar_path = os.path.join(rs.getRSDirAbs(rs_dir, 1, 1, real_id), out_raster_name)
         rs.writeRSDirs(rs_dir, real_id)
-        rs.copyRSFiles(in_dem, rs_dem_path)
-        rs.copyRSFiles(in_canopy, rs_canopy_path)
-        rs.copyRSFiles(in_stream, rs_stream_path)
-        rs.copyRSFiles(in_strm_area, rs_strm_area_path)
-        rs.copyRSFiles(out_raster, rs_solar_path)
+        rs.copyRSFiles(in_dem, abs_dem_path)
+        rs.copyRSFiles(in_canopy, abs_canopy_path)
+        rs.copyRSFiles(in_stream, abs_stream_path)
+        rs.copyRSFiles(in_strm_area, abs_strm_area_path)
+        rs.copyRSFiles(out_raster, abs_solar_path)
+        # write project XML file. Note the use of the 'relative path version' of get directories function
+        rel_dem_path = os.path.join(rs.getRSDirRel(0), in_dem_name)
+        rel_canopy_path = os.path.join(rs.getRSDirRel(1, 0, real_id), in_canopy_name)
+        rel_stream_path = os.path.join(rs.getRSDirRel(1, 0, real_id), in_stream_name)
+        rel_strm_area_path = os.path.join(rs.getRSDirRel(1, 0, real_id), in_strm_area_name)
+        rel_solar_path = os.path.join(rs.getRSDirRel(1, 1, real_id), out_raster_name)
         metadata(projectXML,
-                 rs_dem_path,
-                 rs_canopy_path,
-                 rs_stream_path,
-                 rs_strm_area_path,
+                 rel_dem_path,
+                 rel_canopy_path,
+                 rel_stream_path,
+                 rel_strm_area_path,
                  time_config,
                  day_intv,
                  hour_intv,
-                 rs_solar_path,
+                 rel_solar_path,
                  wshd_name,
                  real_name,
                  real_id)

@@ -59,11 +59,19 @@ def copyRSFiles(from_file, out_file):
         arcpy.CopyRaster_management("from_ras_lyr", out_file)
         arcpy.Delete_management("from_ras_lyr")
 
-def getRSdirs(root, subdir_index='', outdir_index='', real_id=''):
+
+def getRSDirAbs(root, subdir_index='', outdir_index='', real_id=''):
     if subdir_index != '' and outdir_index != '':
         return os.path.join(root, RS_SUBDIRS[subdir_index], real_id, RS_OUTDIRS[outdir_index]) # Realizations folder
     if subdir_index != '' and outdir_index == '':
         return os.path.join(root, RS_SUBDIRS[subdir_index]) # Inputs folder
+
+
+def getRSDirRel(subdir_index='', outdir_index='', real_id=''):
+    if subdir_index != '' and outdir_index != '':
+        return os.path.join(RS_SUBDIRS[subdir_index], real_id, RS_OUTDIRS[outdir_index]) # Realizations folder
+    if subdir_index != '' and outdir_index == '':
+        return RS_SUBDIRS[subdir_index] # Inputs folder
 
 
 def getHUCID(wshd_name):

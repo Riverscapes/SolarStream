@@ -46,8 +46,7 @@ def metadata(solarXML, in_raster, in_stream, in_strm_area, out_fc, real_id):
 
     solarXML.getOperator()
     # add Realization input tags
-    solarXML.addRealizationInputData(solarXML.project, "Raster", "SOLAR", real_id, "Solar insolation raster dataset", in_stream,
-                                     solarXML.getUUID())
+    solarXML.addRealizationInputRef(solarXML.project, "Raster", "SOLAR", real_id, "SOL_RAS")
     solarXML.addMeta("solar_vector Start Time", timeStart, solarXML.project, "SOLAR", real_id)
     solarXML.addMeta("solar_vector Stop Time", timeStop, solarXML.project, "SOLAR", real_id)
 
@@ -87,11 +86,11 @@ def main(in_raster, in_stream, in_strm_indx, in_strm_area, out_fc):
 
     # start writing metadata
     time_stamp = time.strftime("%Y%m%d%H%M")
-    out_xml = os.path.join(out_dir, "{0}_{1}.{2}".format("meta_predict", time_stamp, "xml"))
+    out_xml = os.path.join(out_dir, "{0}_{1}.{2}".format("meta_solarVector", time_stamp, "xml"))
     mWriter = meta_sfr.MetadataWriter("Predict Solar Insolation for a Stream Network", "0.4")
     mWriter.createRun()
     mWriter.currentRun.addParameter("Solar insolation raster dataset", in_raster)
-    mWriter.currentRun.addParameter("Segmented sream network feature class", in_stream)
+    mWriter.currentRun.addParameter("Stream network feature class", in_stream)
     mWriter.currentRun.addParameter("Stream unique ID field", in_strm_indx)
     mWriter.currentRun.addParameter("Stream area polygon feature class", in_strm_area)
     mWriter.currentRun.addOutput("Output polyline feature class with solar values", out_fc)
@@ -146,17 +145,21 @@ def main(in_raster, in_stream, in_strm_indx, in_strm_area, out_fc):
         if rs_bool == "true":
             arcpy.AddMessage("Exporting to Riverscapes project...")
             real_id = projectXML.realIDdict[rs_real_name]
-            ras_path = os.path.join(rs.getRSdirs(rs_dir, 1, 0, real_id), in_raster_name)
-            stream_path = os.path.join(rs.getRSdirs(rs_dir, 1, 0, real_id), in_stream_name)
-            strm_area_path = os.path.join(rs.getRSdirs(rs_dir, 1, 0, real_id), in_strm_area_name)
-            out_path = os.path.join(rs.getRSdirs(rs_dir, 1, 2, real_id), out_fc_name)
-            rs.copyRSFiles(in_raster, ras_path)
-            rs.copyRSFiles(in_stream, stream_path)
-            rs.copyRSFiles(in_strm_area, strm_area_path)
-            rs.copyRSFiles(out_fc, out_path)
-            metadata(projectXML, ras_path, stream_path, strm_area_path, out_path, real_id)
-            #(solarXML, in_raster, in_stream, in_strm_area, out_fc, real_id)
-
+            # copy input/output data to Riverscapes project directories
+            abs_ras_path = os.path.join(rs.getRSDirAbs(rs_dir, 1, 0, real_id), in_raster_name)
+            abs_strm_path = os.path.join(rs.getRSDirAbs(rs_dir, 1, 0, real_id), in_stream_name)
+            abs_strm_area_path = os.path.join(rs.getRSDirAbs(rs_dir, 1, 0, real_id), in_strm_area_name)
+            abs_out_path = os.path.join(rs.getRSDirAbs(rs_dir, 1, 2, real_id), out_fc_name)
+            rs.copyRSFiles(in_raster, abs_ras_path)
+            rs.copyRSFiles(in_stream, abs_strm_path)
+            rs.copyRSFiles(in_strm_area, abs_strm_area_path)
+            rs.copyRSFiles(out_fc, abs_out_path)
+            # write project XML file. Note the use of the 'relative path version' of get directories function
+            rel_ras_path = os.path.join(rs.getRSDirRel(1, 0, real_id), in_raster_name)
+            rel_strm_path = os.path.join(rs.getRSDirRel(1, 0, real_id), in_stream_name)
+            rel_strm_area_path = os.path.join(rs.getRSDirRel(1, 0, real_id), in_strm_area_name)
+            rel_out_path = os.path.join(rs.getRSDirRel(1, 2, real_id), out_fc_name)
+            metadata(projectXML, rel_ras_path, rel_strm_path, rel_strm_area_path, rel_out_path, real_id)
 
         # clean up in_memory files
         u.clear_inmem()
