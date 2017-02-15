@@ -1,4 +1,5 @@
- Solar Stream Tools
+
+# Solar Stream Tools
 
 ## Summary
 The [Integrated Status and Effectivness Monitoring Program](https://isemp.org) (ISEMP) will be developing a gross primary production (GPP) model for stream networks in the Columbia Basin in order to make spatially-explicit predictions regarding salmonid habitat needs. Solar insolation directly affects stream temperature (Sinokrot and Stefan, 1993) and the primary productivity of streams (Fisher and Likens, 1973; Hill et al., 1995). Eco Logical Research, Inc. has explored using areal solar insolation as an input parameter for a forthcoming gross primary production model. South Fork Research, Inc. (SFR) is investigating methods for modeling solar insolation of streams in the Columbia Basin. Specifically, SFR seeks to develop a methodology for modeling solar insolation that will more closely emulate the effects of shading from riparian vegetation and topography.
@@ -27,10 +28,9 @@ The Solar Stream toolbox is provided as a zip file containing an ESRI .tbx file 
 ### Data Input Requirements:
 
 * NHD+ 1:24k flowlines, segmented
-* DEM 10m<sup>2</sup>
-* USGS HUC 4 polygon
-* Stream area polygon (i.e. bankfull or NHD Area)
-* NBDC canopy height
+* DEM 10m raster dataset <sup>2</sup>
+* Stream area polygon dataset (i.e. bankfull or USGS NHD Area)
+* NBDC canopy height raster dataset
 
 ### Suggested User Workflow
 
