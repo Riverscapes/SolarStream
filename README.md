@@ -28,7 +28,7 @@ The Solar Stream toolbox is provided as a zip file containing an ESRI .tbx file 
 ### Data Input Requirements:
 
 * NHD+ 1:24k flowlines, segmented
-* DEM 10m raster dataset <sup>2</sup>
+* DEM 10m<sup>2</sup> raster dataset
 * Stream area polygon dataset (i.e. bankfull or USGS NHD Area)
 * NBDC canopy height raster dataset
 
