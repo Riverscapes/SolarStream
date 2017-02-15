@@ -16,6 +16,8 @@ import metadata.meta_rs as meta_rs
 import metadata.meta_sfr as meta_sfr
 import riverscapes as rs
 
+version = "0.5"
+
 # set environmental variables
 arcpy.CheckOutExtension("Spatial")
 arcpy.env.overwriteOutput = True
@@ -71,7 +73,7 @@ def metadata(solarXML,
     # Add Project input tags
     solarXML.addProjectInput("Raster", "Bare earth DEM raster dataset", in_dem, solarXML.project, "DEM", solarXML.getUUID())
     # Add Realization tags
-    solarXML.addRealization(real_name, real_id, timeStop, '0.1', solarXML.getUUID())
+    solarXML.addRealization(real_name, real_id, timeStop, version, solarXML.getUUID())
     solarXML.addMeta("Operator", solarXML.operator, solarXML.project, "SOLAR", real_id)
     solarXML.addMeta("ComputerID", solarXML.computerID, solarXML.project, "SOLAR", real_id)
     solarXML.addMeta("solar_raster Start Time", timeStart, solarXML.project, "SOLAR", real_id)
@@ -131,7 +133,7 @@ def main(in_dem,
     # initiate generic metadata XML object
     time_stamp = time.strftime("%Y%m%d%H%M")
     out_xml = os.path.join(out_dir, "{0}_{1}.{2}".format("meta_solarRaster", time_stamp, "xml"))
-    mWriter = meta_sfr.MetadataWriter("Calculate Solar Insolation for a Stream Network", "0.1")
+    mWriter = meta_sfr.MetadataWriter("Calculate Solar Insolation for a Stream Network", version)
     mWriter.createRun()
     mWriter.currentRun.addParameter("DEM raster", in_dem)
     mWriter.currentRun.addParameter("Canopy height raster", in_canopy)

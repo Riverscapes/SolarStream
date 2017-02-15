@@ -6,7 +6,7 @@
 #               approximation of shading based on topography and vegetation.
 # author:		Jesse Langdon
 # dependencies: ESRI arcpy module, Spatial Analyst extension, util.py
-# version:		0.5
+
 
 import arcpy, os
 import sys
