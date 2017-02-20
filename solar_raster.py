@@ -5,7 +5,7 @@
 #               Surface tool relies heavily on ESRI's Area Solar Radiation tool.
 # author:		Jesse Langdon
 # dependencies: ESRI arcpy module, Spatial Analyst extension, util.py
-# version:		0.5
+# version:		0.5.1
 
 import arcpy
 import os
@@ -16,7 +16,7 @@ import metadata.meta_rs as meta_rs
 import metadata.meta_sfr as meta_sfr
 import riverscapes as rs
 
-version = "0.5"
+version = "0.5.1"
 
 # set environmental variables
 arcpy.CheckOutExtension("Spatial")
@@ -41,7 +41,6 @@ rs_dir = arcpy.GetParameterAsText(13) # directory where Riverscape project files
 
 # get output directory
 out_dir = os.path.dirname(result)
-
 
 def metadata(solarXML,
              in_dem,
@@ -74,24 +73,24 @@ def metadata(solarXML,
     solarXML.addProjectInput("Raster", "Bare earth DEM raster dataset", in_dem, solarXML.project, "DEM", solarXML.getUUID())
     # Add Realization tags
     solarXML.addRealization(real_name, real_id, timeStop, version, solarXML.getUUID())
-    solarXML.addMeta("Operator", solarXML.operator, solarXML.project, "SOLAR", real_id)
-    solarXML.addMeta("ComputerID", solarXML.computerID, solarXML.project, "SOLAR", real_id)
-    solarXML.addMeta("solar_raster Start Time", timeStart, solarXML.project, "SOLAR", real_id)
-    solarXML.addMeta("solar_raster Stop Time", timeStop, solarXML.project, "SOLAR", real_id)
+    solarXML.addMeta("Operator", solarXML.operator, solarXML.project, "Solar", real_id)
+    solarXML.addMeta("ComputerID", solarXML.computerID, solarXML.project, "Solar", real_id)
+    solarXML.addMeta("solar_raster Start Time", timeStart, solarXML.project, "Solar", real_id)
+    solarXML.addMeta("solar_raster Stop Time", timeStop, solarXML.project, "Solar", real_id)
     # Add Parameter tags
-    solarXML.addParameter("Time configuration", time_config, solarXML.project, "SOLAR", real_id)
-    solarXML.addParameter("Day interval", day_intv, solarXML.project, "SOLAR", real_id)
-    solarXML.addParameter("Hour interval", hour_intv, solarXML.project, "SOLAR", real_id)
+    solarXML.addParameter("Time configuration", time_config, solarXML.project, "Solar", real_id)
+    solarXML.addParameter("Day interval", day_intv, solarXML.project, "Solar", real_id)
+    solarXML.addParameter("Hour interval", hour_intv, solarXML.project, "Solar", real_id)
     # Add Realization input tags
-    solarXML.addRealizationInputRef(solarXML.project, "Raster", "SOLAR", real_id, "DEM")
-    solarXML.addRealizationInputData(solarXML.project, "Raster", "SOLAR", real_id, "Vegetation height raster dataset", in_canopy,
+    solarXML.addRealizationInputRef(solarXML.project, "Raster", "Solar", real_id, "DEM")
+    solarXML.addRealizationInputData(solarXML.project, "Raster", "Solar", real_id, "Vegetation height raster dataset", in_canopy,
                                  solarXML.getUUID())
-    solarXML.addRealizationInputData(solarXML.project, "Vector", "SOLAR", real_id, "Stream network polyline feature class", in_stream,
+    solarXML.addRealizationInputData(solarXML.project, "Vector", "Solar", real_id, "Stream network polyline feature class", in_stream,
                                  solarXML.getUUID())
-    solarXML.addRealizationInputData(solarXML.project, "Vector", "SOLAR", real_id, "Stream area polygon feature class", in_strm_area,
+    solarXML.addRealizationInputData(solarXML.project, "Vector", "Solar", real_id, "Stream area polygon feature class", in_strm_area,
                                  solarXML.getUUID())
     # Add Analysis output tags
-    solarXML.addOutput("Raster", "Solar insolation raster dataset", result, solarXML.realizations, "SOLAR", real_id, "SOL_RAS",
+    solarXML.addOutput("Raster", "Solar insolation raster dataset", result, solarXML.realizations, "Solar", real_id, "SOL_RAS",
                        solarXML.getUUID())
     solarXML.write()
 

@@ -103,7 +103,7 @@ class ProjectXML:
 
     def addRealization(self, name, id, dateCreated='',  productVersion='', guid=''):
         """adds an EC realization tag to the project xml document"""
-        node = ET.SubElement(self.realizations, "SOLAR")
+        node = ET.SubElement(self.realizations, "Solar")
         if id is not '':
             node.set('id', id)
         if dateCreated is not '':
@@ -212,16 +212,16 @@ class ProjectXML:
             for key, val in subRealizationNode.attrib.items():
                 if val == realizationID:
                     realIDNode = subRealizationNode
-            analysisNode = realIDNode.find("Analysis")
+            analysisNode = realIDNode.find("Analyses")
             outputsNode = analysisNode.find("Outputs")
         elif parentNode == self.realizations:
             subRealizationNode = parentNode.find(subrealization)
             for key, val in subRealizationNode.attrib.items():
                 if val == realizationID:
                     realIDNode = subRealizationNode
-            analysisNode = realIDNode.find("Analysis")
+            analysisNode = realIDNode.find("Analyses")
             if analysisNode is None:
-                analysisNode = ET.SubElement(subRealizationNode, "Analysis")
+                analysisNode = ET.SubElement(subRealizationNode, "Analyses")
                 outputsNode = analysisNode.find("Outputs")
                 if outputsNode is None:
                     outputsNode = ET.SubElement(analysisNode, "Outputs")

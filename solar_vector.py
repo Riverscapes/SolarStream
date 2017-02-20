@@ -46,16 +46,16 @@ def metadata(solarXML, in_raster, in_stream, in_strm_area, out_fc, real_id):
 
     solarXML.getOperator()
     # add Realization input tags
-    solarXML.addRealizationInputRef(solarXML.project, "Raster", "SOLAR", real_id, "SOL_RAS")
-    solarXML.addMeta("solar_vector Start Time", timeStart, solarXML.project, "SOLAR", real_id)
-    solarXML.addMeta("solar_vector Stop Time", timeStop, solarXML.project, "SOLAR", real_id)
+    solarXML.addRealizationInputRef(solarXML.project, "Raster", "Solar", real_id, "SOL_RAS")
+    solarXML.addMeta("solar_vector Start Time", timeStart, solarXML.project, "Solar", real_id)
+    solarXML.addMeta("solar_vector Stop Time", timeStop, solarXML.project, "Solar", real_id)
 
     # add Analysis output tags
     solarXML.addOutput("Vector",
                        "Output polyline feature with solar values",
                        out_fc,
                        solarXML.project,
-                       "SOLAR",
+                       "Solar",
                        real_id,
                        "PRED_SOLAR",
                        solarXML.getUUID())
