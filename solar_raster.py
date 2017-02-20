@@ -6,7 +6,6 @@
 # author:		Jesse Langdon
 # dependencies: ESRI arcpy module, Spatial Analyst extension, util.py
 # version:		0.5.1
-
 import arcpy
 import os
 import time
