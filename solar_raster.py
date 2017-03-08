@@ -5,7 +5,7 @@
 #               Surface tool relies heavily on ESRI's Area Solar Radiation tool.
 # author:		Jesse Langdon
 # dependencies: ESRI arcpy module, Spatial Analyst extension, util.py
-# version:		0.5.1
+# version:		0.5.2
 import arcpy
 import os
 import time
@@ -15,7 +15,7 @@ import metadata.meta_rs as meta_rs
 import metadata.meta_sfr as meta_sfr
 import riverscapes as rs
 
-version = "0.5.1"
+version = "0.5.2"
 
 # set environmental variables
 arcpy.CheckOutExtension("Spatial")
