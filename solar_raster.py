@@ -147,7 +147,7 @@ def main(in_dem,
     # initiate Riverscapes project XML object
     if rs_bool == "true":
         rs.writeRSRoot(rs_dir)
-        rs_xml = "{0}\\{1}".format(rs_dir, "solar_project.xml")
+        rs_xml = "{0}\\{1}".format(rs_dir, "project.rs.xml")
         projectXML = meta_rs.ProjectXML("solar_raster", rs_xml, "Solar", proj_name)
 
     # solar parameters
