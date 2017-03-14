@@ -104,7 +104,7 @@ def main(in_raster, in_stream, in_strm_indx, in_strm_area, out_fc):
 
         # initiate Riverscapes project XML object and start processing timestamp
         if rs_bool == "true":
-            rs_xml = "{0}\\{1}".format(rs_dir, "solar_project.xml")
+            rs_xml = "{0}\\{1}".format(rs_dir, "project.rs.xml")
             projectXML = meta_rs.ProjectXML("solar_vector", rs_xml)
 
         # convert stream and stream area polygon to two-class raster dataset
