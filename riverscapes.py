@@ -47,12 +47,13 @@ def writeRSRoot(rs_root):
         os.chmod(rs_root, 0o777)
 
 
-def writeRSDirs(rs_root, real_id):
+def writeRSDirs(rs_root, real_id=''):
     """Writes optional Riverscape project file folders"""
     for subdir in RS_SUBDIRS:
         os.makedirs(os.path.join(rs_root, subdir))
-    for outdir in RS_OUTDIRS:
-        os.makedirs(os.path.join(rs_root, RS_SUBDIRS[1], real_id, outdir))
+    if real_id:
+        for outdir in RS_OUTDIRS:
+            os.makedirs(os.path.join(rs_root, RS_SUBDIRS[1], real_id, outdir))
 
 
 def copyRSFiles(from_file, out_file):
