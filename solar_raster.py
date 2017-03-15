@@ -188,7 +188,7 @@ def main(in_dem,
         abs_stream_path = os.path.join(rs.getRSDirAbs(rs_dir, 1, 0, real_id), in_stream_name)
         abs_strm_area_path = os.path.join(rs.getRSDirAbs(rs_dir, 1, 0, real_id), in_strm_area_name)
         abs_solar_path = os.path.join(rs.getRSDirAbs(rs_dir, 1, 1, real_id), out_raster_name)
-        rs.writeRSDirs(rs_dir, real_id)
+        rs.writeRealDir(rs_dir, real_id)
         rs.copyRSFiles(in_dem, abs_dem_path)
         rs.copyRSFiles(in_canopy, abs_canopy_path)
         rs.copyRSFiles(in_stream, abs_stream_path)
