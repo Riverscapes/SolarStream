@@ -5,7 +5,7 @@
 #               Surface tool relies heavily on ESRI's Area Solar Radiation tool.
 # author:		Jesse Langdon
 # dependencies: ESRI arcpy module, Spatial Analyst extension, util.py
-# version:		0.5.2
+# version:		0.5.4
 import arcpy
 import os
 import time
@@ -15,31 +15,11 @@ import metadata.meta_rs as meta_rs
 import metadata.meta_sfr as meta_sfr
 import riverscapes as rs
 
-version = "0.5.2"
+version = "0.5.4"
 
 # set environmental variables
 arcpy.CheckOutExtension("Spatial")
 arcpy.env.overwriteOutput = True
-
-# set input variables
-in_dem = arcpy.GetParameterAsText(0) # input raster dataset represents "bare earth" topographic surface.
-in_canopy = arcpy.GetParameterAsText(1) # input raster dataset represents vegetation or canopy height
-in_stream = arcpy.GetParameterAsText(2) # segmented stream network as vector dataset.
-in_strm_area = arcpy.GetParameterAsText(3) # polygon representing open water areas of the stream (i.e. bankfull)
-time_config = arcpy.GetParameterAsText(4) # time period for calculating solar radiation.
-day_intv = arcpy.GetParameterAsText(5) # time interval (by days) used for calculation of sky vectors.
-hour_intv = arcpy.GetParameterAsText(6)  # time interval (by hour) used for calculating sky vectors.
-result = arcpy.GetParameterAsText(7)  # raster dataset that is the final output of the model.
-workspace_temp = arcpy.GetParameterAsText(8)
-rs_bool = arcpy.GetParameterAsText(9) # boolean parameter indicates Riverscape project output requirement.
-wshd_name = arcpy.GetParameterAsText(10) # name of project watershed. required for Riverscape XML file.
-rs_proj_name = arcpy.GetParameterAsText(11) # Riverscapes project name
-rs_real_name = arcpy.GetParameterAsText(12) # Riverscapes realization name
-rs_dir = arcpy.GetParameterAsText(13) # directory where Riverscape project files will be written.
-
-
-# get output directory
-out_dir = os.path.dirname(result)
 
 def metadata(solarXML,
              in_dem,
@@ -121,6 +101,7 @@ def main(in_dem,
     in_ras = arcpy.sa.Raster(in_dem)
     in_ras_extent = in_ras.extent
     arcpy.env.extent = in_ras_extent
+    out_dir = os.path.dirname(out_raster)
 
     in_dem_name = os.path.basename(in_dem)
     in_canopy_name = os.path.basename(in_canopy)
@@ -193,7 +174,7 @@ def main(in_dem,
     elev_vegtopo.save(workspace_temp + r"\elev_vegtopo")
 
     # calculate mean solar radiation per bankfull buffer
-    area_solar = AreaSolarRadiation(elev_vegtopo, latitude, sky_size, time_config, day_intv, hour_intv)
+    area_solar = AreaSolarRadiation(elev_vegtopo, latitude, sky_size, time_config, day_intrvl, hour_intrvl)
     area_solar.save(out_raster)
     arcpy.AddMessage("Tool output saved to " + out_raster)
 
@@ -225,8 +206,8 @@ def main(in_dem,
                  rel_stream_path,
                  rel_strm_area_path,
                  time_config,
-                 day_intv,
-                 hour_intv,
+                 day_intrvl,
+                 hour_intrvl,
                  rel_solar_path,
                  wshd_name,
                  real_name,
@@ -242,21 +223,21 @@ def main(in_dem,
 
     arcpy.CheckInExtension("Spatial")
 
-    return result
+    return
 
 
-if __name__ == "__main__":
-    main(in_dem,
-         in_canopy,
-         in_stream,
-         in_strm_area,
-         workspace_temp,
-         time_config,
-         day_intv,
-         hour_intv,
-         result,
-         rs_bool,
-         wshd_name,
-         rs_proj_name,
-         rs_real_name,
-         rs_dir)
+# if __name__ == "__main__":
+#     main(in_dem,
+#          in_canopy,
+#          in_stream,
+#          in_strm_area,
+#          workspace_temp,
+#          time_config,
+#          day_intv,
+#          hour_intv,
+#          result,
+#          rs_bool,
+#          wshd_name,
+#          rs_proj_name,
+#          rs_real_name,
+#          rs_dir)

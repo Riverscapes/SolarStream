@@ -10,7 +10,6 @@
 
 import arcpy, os
 import sys
-import gc
 import time
 from arcpy.sa import *
 import util as u
@@ -21,17 +20,6 @@ import riverscapes as rs
 # set environmental variables
 arcpy.CheckOutExtension("Spatial")
 arcpy.env.overwriteOutput = True
-
-# set input variables
-in_raster = arcpy.GetParameterAsText(0) # Raster dataset representing solar insolation, output from solar_raster.py
-in_stream = arcpy.GetParameterAsText(1) # Segmented stream network as a vector dataset.
-in_strm_indx = arcpy.GetParameterAsText(2) # Unique ID field for segmented stream network (i.e. "LineOID")
-in_strm_area = arcpy.GetParameterAsText(3) # Polygon representing open water areas of the stream (i.e. NHD Area)
-result = arcpy.GetParameterAsText(4)  # Feature class that is the final output of the model.
-workspace_temp = arcpy.GetParameterAsText(5) #
-rs_bool = arcpy.GetParameterAsText(6) # Boolean value indicates if this is a Riverscapes project.
-rs_dir = arcpy.GetParameterAsText(7) # Directory where Riverscapes project files are stored
-rs_real_name = arcpy.GetParameterAsText(8) # Riverscapes project realization name.
 
 
 def metadata(solarXML, in_raster, in_stream, in_strm_area, out_fc, real_id):
@@ -63,7 +51,7 @@ def metadata(solarXML, in_raster, in_stream, in_strm_area, out_fc, real_id):
     return
 
 
-def main(in_raster, in_stream, in_strm_indx, in_strm_area, out_fc):
+def main(in_raster, in_stream, in_strm_indx, in_strm_area, out_fc, workspace_temp, rs_bool, rs_dir, rs_real_name):
     # set environmental variables
     arcpy.env.outputCoordinateSystem = in_raster
     arcpy.env.snapRaster = in_raster
@@ -81,8 +69,8 @@ def main(in_raster, in_stream, in_strm_indx, in_strm_area, out_fc):
     in_raster_name = os.path.basename(in_raster)
     in_stream_name = os.path.basename(in_stream)
     in_strm_area_name = os.path.basename(in_strm_area)
-    out_dir = os.path.dirname(result)
-    out_fc_name = os.path.basename(result)
+    out_dir = os.path.dirname(out_fc)
+    out_fc_name = os.path.basename(out_fc)
 
     # start writing metadata
     time_stamp = time.strftime("%Y%m%d%H%M")
@@ -100,7 +88,6 @@ def main(in_raster, in_stream, in_strm_indx, in_strm_area, out_fc):
     in_stream_oid = arcpy.Describe(in_stream).OIDFieldName
 
     if u.checkLineOID(in_stream) == True:
-        gc.enable()
 
         # initiate Riverscapes project XML object and start processing timestamp
         if rs_bool == "true":
@@ -171,7 +158,3 @@ def main(in_raster, in_stream, in_strm_indx, in_strm_area, out_fc):
     arcpy.CheckInExtension("Spatial")
 
     return
-
-
-if __name__ == "__main__":
-    main(in_raster, in_stream, in_strm_indx, in_strm_area, result)

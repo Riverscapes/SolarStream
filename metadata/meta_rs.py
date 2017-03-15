@@ -19,13 +19,13 @@ class ProjectXML:
         ProjectXML object instance
     """
 
-    def __init__(self, tool, filepath, projType='', name=''):
+    def __init__(self, status, filepath, projType='', name=''):
         # Get the start timestamp
         self.timestampStart = datetime.datetime.now().isoformat()
 
         self.logFilePath = filepath
         self.realIDdict = {}
-        if tool == "solar_raster":
+        if status == "new":
             if os.path.isfile(self.logFilePath):
                 os.remove(self.logFilePath)
 
@@ -47,8 +47,7 @@ class ProjectXML:
             self.MetaData = ET.SubElement(self.project, "MetaData")
             self.Inputs = ET.SubElement(self.project, "Inputs")
             self.realizations = ET.SubElement(self.project, "Realizations")
-
-        else:
+        elif status == "existing":
             if os.path.isfile(self.logFilePath):
                 self.projectTree = ET.parse(filepath)
                 self.project = self.projectTree.getroot()
