@@ -11,7 +11,7 @@ It is recommended that prior to using this tool, the required stream network inp
 
 ## Download
 
-#### [Current Version (0.5.2)](https://github.com/SouthForkResearch/solar_stream/archive/master.zip) released on 3/8/2017
+#### [Current Version (0.5.4)](https://github.com/SouthForkResearch/solar_stream/archive/master.zip) released on 3/20/2017
   * Revised output of Riverscape Project XML file.
 
 ### Installation
