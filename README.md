@@ -22,7 +22,7 @@ The Solar Stream toolbox is provided as a zip file containing an ESRI .tbx file 
 
 1. Unzip the contents to your computer (keep all files in the same directory)
 2. Open ArcGIS
-3. Add the .tbx file to ArcToolbox.
+3. Add the SolarStreamTools.pyt file to ArcToolbox.
 
 ## Using the Solar Stream Tools
 
