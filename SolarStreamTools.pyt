@@ -1,9 +1,12 @@
+import os
 import arcpy
+import metadata.meta_rs as meta
 import create_project
 import solar_raster
 import solar_vector
 
 # CONSTANTS
+version = "0.5.4"
 list_wshd = ['Big-Navarro-Garcia (CA)',
              'Clearwater',
              'Entiat',
@@ -130,7 +133,6 @@ class SolarRasterTool(object):
 
     def getParameterInfo(self):
         """Define parameter definitions"""
-        reload(solar_raster)
         param0 = arcpy.Parameter(
             name = 'in_dem',
             displayName = 'Bare earth DEM raster dataset',
@@ -209,13 +211,13 @@ class SolarRasterTool(object):
             category='Riverscapes Project Management')
 
         param10 = arcpy.Parameter(
-            name = 'wshd_name',
-            displayName = 'Watershed name',
+            name = 'rs_dir',
+            displayName = 'Riverscapes workspace',
             parameterType = 'Optional',
             direction = 'Input',
-            datatype = 'GPString',
+            datatype = 'DEWorkspace',
             category = 'Riverscapes Project Management')
-        param10.filter.list = list_wshd
+        param10.filter.list = ['File System']
 
         param11 = arcpy.Parameter(
             name = 'proj_name',
@@ -223,6 +225,7 @@ class SolarRasterTool(object):
             parameterType = 'Optional',
             direction = 'Input',
             datatype = 'GPString',
+            enabled = 'false',
             category = 'Riverscapes Project Management')
 
         param12 = arcpy.Parameter(
@@ -233,14 +236,6 @@ class SolarRasterTool(object):
             datatype = 'GPString',
             category = 'Riverscapes Project Management')
 
-        param13 = arcpy.Parameter(
-            name = 'rs_dir',
-            displayName = 'Riverscapes workspace',
-            parameterType = 'Optional',
-            direction = 'Input',
-            datatype = 'DEWorkspace',
-            category = 'Riverscapes Project Management')
-        param13.filter.list = ['File System']
 
         return [param0,
                 param1,
@@ -254,8 +249,7 @@ class SolarRasterTool(object):
                 param9,
                 param10,
                 param11,
-                param12,
-                param13]
+                param12]
 
     def isLicensed(self):
         """Set whether tool is licensed to execute."""
@@ -266,24 +260,38 @@ class SolarRasterTool(object):
         parameter. This method is called after internal validation."""
         if parameters[9].value == True:
             parameters[10].enabled = True
-            parameters[11].enabled = True
             parameters[12].enabled = True
-            parameters[13].enabled = True
+            # add project name from XML if it exists
+            if parameters[10].altered == True:
+                if os.path.isdir(str(parameters[10].value)):
+                    rs_xml = "{0}\\{1}".format(parameters[10].value, "project.rs.xml")
+                    if os.path.isfile(str(rs_xml)):
+                        projectXML = meta.ProjectXML("existing", rs_xml, "Solar")
+                        proj_name = projectXML.getProjectName(projectXML.project, "Name")
+                        parameters[11].value = proj_name[0]
         else:
             parameters[10].enabled = False
-            parameters[11].enabled = False
+            # the Project Name parameter is always disabled for editing in this tool
+            parameters[11].value = ''
             parameters[12].enabled = False
-            parameters[13].enabled = False
-        return
 
     def updateMessages(self, parameters):
         """Modify the values and properties of parameters before internal
         validation is performed.  This method is called whenever a parameter
         has been changed."""
+        if parameters[10].altered == True:
+            pathProjectInputs = "{0}\\{1}".format(parameters[10].value,"ProjectInputs")
+            pathRealizations = "{0}\\{1}".format(parameters[10].value, "Realizations")
+            # check if this is a Riverscapes project folder
+            if os.path.exists(pathProjectInputs) and os.path.exists(pathRealizations):
+                rs_xml = "{0}\\{1}".format(parameters[10].value, "project.rs.xml")
+                if not os.path.isfile(rs_xml):
+                    parameters[10].setErrorMessage("This is not a valid Riverscapes project!")
+            else:
+                parameters[10].setErrorMessage("Valid Riverscape data folders are missing from this directory!")
         return
 
     def execute(self, p, messages):
-        reload(solar_raster)
         solar_raster.main(p[0].valueAsText,
                          p[1].valueAsText,
                          p[2].valueAsText,
@@ -296,8 +304,7 @@ class SolarRasterTool(object):
                          p[9].valueAsText,
                          p[10].valueAsText,
                          p[11].valueAsText,
-                         p[12].valueAsText,
-                         p[13].valueAsText)
+                         p[12].valueAsText)
         return
 
 
@@ -380,12 +387,23 @@ class SolarVectorTool(object):
         param7.filter.list = ['File System']
 
         param8 = arcpy.Parameter(
+            name = 'rs_proj',
+            displayName = 'Project name',
+            parameterType = 'Optional',
+            direction = 'Input',
+            datatype = 'GPString',
+            enabled = 'false',
+            category = 'Riverscapes Project Management')
+
+        param9 = arcpy.Parameter(
             name = 'rs_real_name',
             displayName = 'Realization name',
             parameterType = 'Optional',
             direction = 'Input',
             datatype = 'GPString',
             category='Riverscapes Project Management')
+        param9.filter.type = "ValueList"
+        param9.filter.list = []
 
         return [param0,
                 param1,
@@ -395,31 +413,56 @@ class SolarVectorTool(object):
                 param5,
                 param6,
                 param7,
-                param8]
+                param8,
+                param9]
 
     def isLicensed(self):
         """Set whether tool is licensed to execute."""
         return True
 
-    def updateParameters(self, p):
+    def updateParameters(self, parameters):
         """Modify the values and properties of parameters before internal
         validation is performed. This method is called whenever a parameter
         has been changed."""
-        if p[6].value == True:
-            p[7].enabled = True
-            p[8].enabled = True
+
+        if parameters[6].value == True:
+            parameters[7].enabled = True
+            parameters[9].enabled = True
+            # add project name from XML if it exists
+            if parameters[7].altered == True:
+                if os.path.isdir(str(parameters[7].value)):
+                    rs_xml = "{0}\\{1}".format(parameters[7].value, "project.rs.xml")
+                    if os.path.isfile(str(rs_xml)):
+                        projectXML = meta.ProjectXML("existing", rs_xml, "Solar")
+                        proj_name = projectXML.getProjectName(projectXML.project, "Name")
+                        parameters[8].value = proj_name[0]
+                        real_names = projectXML.getRealNames(projectXML.project, "Solar")
+                        parameters[9].filter.list = real_names
         else:
-            p[7].enabled = False
-            p[8].enabled = False
+            parameters[7].value = ''
+            parameters[7].enabled = False
+            parameters[8].value = ''
+            parameters[9].value = ''
+            parameters[9].enabled = False
+
         return
 
     def updateMessages(self, parameters):
         """Modify the messages created by internal validation for each tool
         parameter.  This method is called after internal validation."""
+        if parameters[7].altered == True:
+            pathProjectInputs = "{0}\\{1}".format(parameters[7].value,"ProjectInputs")
+            pathRealizations = "{0}\\{1}".format(parameters[7].value, "Realizations")
+            # check if this is a Riverscapes project folder
+            if os.path.exists(pathProjectInputs) and os.path.exists(pathRealizations):
+                rs_xml = "{0}\\{1}".format(parameters[7].value, "project.rs.xml")
+                if not os.path.isfile(rs_xml):
+                    parameters[7].setErrorMessage("This is not a valid Riverscapes project!")
+            else:
+                parameters[7].setErrorMessage("Valid Riverscape data folders are missing from this directory!")
         return
 
     def execute(self, p, messages):
-        reload(solar_vector)
         solar_vector.main(p[0].valueAsText,
                          p[1].valueAsText,
                          p[2].valueAsText,
@@ -428,5 +471,14 @@ class SolarVectorTool(object):
                          p[5].valueAsText,
                          p[6].valueAsText,
                          p[7].valueAsText,
-                         p[8].valueAsText)
+                         p[8].valueAsText,
+                         p[9].valueAsText)
         return
+
+# def main():
+#     tbx = Toolbox()
+#     tool = SolarVectorTool()
+#     tool.execute(tool.getParameterInfo(), None)
+#
+# if __name__ == "__main__":
+#     main()

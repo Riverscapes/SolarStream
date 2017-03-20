@@ -48,13 +48,16 @@ class ProjectXML:
             self.Inputs = ET.SubElement(self.project, "Inputs")
             self.realizations = ET.SubElement(self.project, "Realizations")
         elif status == "existing":
+            # if there is an existing realization
             if os.path.isfile(self.logFilePath):
                 self.projectTree = ET.parse(filepath)
                 self.project = self.projectTree.getroot()
                 for node in self.project.getiterator():
                     if node.tag == 'Realizations':
                         self.realizations = node
-            self.getRealIDs(self.realizations)
+            # if this is the first realization
+            if self.realizations.__len__() > 0:
+                self.getRealIDs(self.realizations)
 
 
     def getOperator(self):
@@ -67,13 +70,14 @@ class ProjectXML:
         """adds metadata tags to the project xml document"""
         if subrealization != '' and real_id != '':
             realizationNode = parentNode.find("Realizations")
-            subRealizationNode = realizationNode.find(subrealization)
-            for key, val in subRealizationNode.attrib.items():
-                if val == real_id:
-                    realIDNode = subRealizationNode
-                    metaNode = realIDNode.find("MetaData")
-                    if metaNode is None:
-                        metaNode = ET.SubElement(realIDNode, "MetaData")
+            subRealizationList = realizationNode.findall(subrealization)
+            for subRealizationNode in subRealizationList:
+                for key, val in subRealizationNode.attrib.items():
+                    if val == real_id:
+                        realIDNode = subRealizationNode
+                        metaNode = realIDNode.find("MetaData")
+                        if metaNode is None:
+                            metaNode = ET.SubElement(realIDNode, "MetaData")
         elif subrealization == '' and real_id == '':
             metaNode = parentNode.find("MetaData")
             if metaNode is None:
@@ -85,11 +89,12 @@ class ProjectXML:
 
     def addProjectInput(self, itype, name, path, parentNode, iid='', guid='', append=''):
         """Adds a project input tag"""
-        if append == "True":
-            inputNode = parentNode.find("Inputs")
+        inputNode = parentNode.find("Inputs")
+        numNodeChild = len(inputNode.getchildren())
+        if numNodeChild == 0: # if no child node in Input node, add raster node
             typeNode = ET.SubElement(inputNode, itype)
         else:
-            typeNode = ET.SubElement(self.Inputs, itype)
+            return
         if iid is not '':
             typeNode.set('id', iid)
         if guid is not '':
@@ -98,11 +103,17 @@ class ProjectXML:
         nameNode.text = str(name)
         pathNode = ET.SubElement(typeNode, "Path")
         pathNode.text = str(path)
+        return
 
 
-    def addRealization(self, name, id, dateCreated='',  productVersion='', guid=''):
+    def addRealization(self, name, id, parentNode, dateCreated='',  productVersion='', guid=''):
         """adds an EC realization tag to the project xml document"""
-        node = ET.SubElement(self.realizations, "Solar")
+        realNode = parentNode.find("Realizations")
+        numRealNode = len(realNode.getchildren())
+        if numRealNode == 0:
+            node = ET.SubElement(self.realizations, "Solar")
+        else:
+            node = ET.SubElement(realNode, "Solar")
         if id is not '':
             node.set('id', id)
         if dateCreated is not '':
@@ -118,10 +129,11 @@ class ProjectXML:
     def addParameter(self, name, value, parentNode, subrealization, realizationID):
         """adds parameter tags to the project xml document"""
         realizationNode = parentNode.find("Realizations")
-        subRealizationNode = realizationNode.find(subrealization)
-        for key, val in subRealizationNode.attrib.items():
-            if val == realizationID:
-                realIDNode = subRealizationNode
+        subRealizationList = realizationNode.findall(subrealization)
+        for subRealizationNode in subRealizationList:
+            for key, val in subRealizationNode.attrib.items():
+                if val == realizationID:
+                    realIDNode = subRealizationNode
         paramNode = realIDNode.find("Parameters")
         if paramNode is None:
             paramNode = ET.SubElement(realIDNode, "Parameters")
@@ -134,10 +146,11 @@ class ProjectXML:
     def addRealizationInputData(self, parentNode, type, subrealization, realizationID, name='', path='', guid='', ref='', append=''):
         """adds realization input tags"""
         realizationNode = parentNode.find("Realizations")
-        subRealizationNode = realizationNode.find(subrealization)
-        for key, val in subRealizationNode.attrib.items():
-            if val == realizationID:
-                realIDNode = subRealizationNode
+        subRealizationList = realizationNode.findall(subrealization)
+        for subRealizationNode in subRealizationList:
+            for key, val in subRealizationNode.attrib.items():
+                if val == realizationID:
+                    realIDNode = subRealizationNode
         inputsNode = realIDNode.find("Inputs")
         if inputsNode is None:
             inputsNode = ET.SubElement(subRealizationNode, "Inputs")
@@ -178,10 +191,11 @@ class ProjectXML:
     def addRealizationInputRef(self, parentNode, type, subrealization, realizationID, ref='', append=''):
         """add realization input tags"""
         realizationNode = parentNode.find("Realizations")
-        subRealizationNode = realizationNode.find(subrealization)
-        for key, val in subRealizationNode.attrib.items():
-            if val == realizationID:
-                realIDNode = subRealizationNode
+        subRealizationList = realizationNode.findall(subrealization)
+        for subRealizationNode in subRealizationList:
+            for key, val in subRealizationNode.attrib.items():
+                if val == realizationID:
+                    realIDNode = subRealizationNode
         inputsNode = realIDNode.find("Inputs")
         if inputsNode is None:
             inputsNode = ET.SubElement(subRealizationNode, "Inputs")
@@ -205,30 +219,22 @@ class ProjectXML:
 
     def addOutput(self, otype, name, path, parentNode, subrealization, realizationID, oid='', guid=''):
         """adds an output tag to an analysis tag in the project xml document"""
-        if parentNode == self.project:
-            realizationNode = parentNode.find("Realizations")
-            subRealizationNode = realizationNode.find(subrealization)
+        realizationNode = parentNode.find("Realizations")
+        subRealizationList = realizationNode.findall(subrealization)
+        for subRealizationNode in subRealizationList:
             for key, val in subRealizationNode.attrib.items():
                 if val == realizationID:
                     realIDNode = subRealizationNode
-            analysesNode = realIDNode.find("Analyses")
+        analysesNode = realIDNode.find("Analyses")
+        if analysesNode is None:
+            analysesNode = ET.SubElement(subRealizationNode, "Analyses")
+            analysisNode = ET.SubElement(analysesNode, "Analysis")
+            outputsNode = analysisNode.find("Outputs")
+            if outputsNode is None:
+                outputsNode = ET.SubElement(analysisNode, "Outputs")
+        else:
             analysisNode = analysesNode.find("Analysis")
             outputsNode = analysisNode.find("Outputs")
-        elif parentNode == self.realizations:
-            subRealizationNode = parentNode.find(subrealization)
-            for key, val in subRealizationNode.attrib.items():
-                if val == realizationID:
-                    realIDNode = subRealizationNode
-            analysesNode = realIDNode.find("Analyses")
-            if analysesNode is None:
-                analysesNode = ET.SubElement(subRealizationNode, "Analyses")
-                analysisNode = ET.SubElement(analysesNode, "Analysis")
-                outputsNode = analysisNode.find("Outputs")
-                if outputsNode is None:
-                    outputsNode = ET.SubElement(analysisNode, "Outputs")
-            else:
-                analysisNode = analysesNode.find("Analysis")
-                outputsNode = analysisNode.find("Outputs")
         typeNode = ET.SubElement(outputsNode, otype)
         if oid is not '':
             typeNode.set('id', oid)
@@ -242,6 +248,23 @@ class ProjectXML:
 
     def getUUID(self):
         return str(uuid.uuid4()).upper()
+
+
+    def getProjectName(self, parentNode, nameNode):
+        listNodeValues = []
+        for node in parentNode.findall(nameNode):
+            listNodeValues.append(node.text.strip())
+        return listNodeValues
+
+
+    def getRealNames(self, parentNode, realNode):
+        listNodeValues = []
+        realizationNode = parentNode.find("Realizations")
+        listSubRealizationNodes = realizationNode.findall(realNode)
+        for node in listSubRealizationNodes:
+            nameNode = node.find("Name")
+            listNodeValues.append(nameNode.text.strip())
+        return listNodeValues
 
 
     def getRealIDs(self, parentNode):
@@ -270,4 +293,3 @@ class ProjectXML:
         f = open(self.logFilePath, "wb")
         f.write(pretty)
         f.close()
-

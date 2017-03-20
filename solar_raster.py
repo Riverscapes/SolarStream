@@ -6,6 +6,7 @@
 # author:		Jesse Langdon
 # dependencies: ESRI arcpy module, Spatial Analyst extension, util.py
 # version:		0.5.4
+
 import arcpy
 import os
 import time
@@ -21,6 +22,22 @@ version = "0.5.4"
 arcpy.CheckOutExtension("Spatial")
 arcpy.env.overwriteOutput = True
 
+# # TEST
+# in_dem = r"C:\JL\Testing\solar\Riverscapes\NewRealization\Inputs\dem_100m.tif"
+# in_canopy = r"C:\JL\Testing\solar\Riverscapes\NewRealization\Inputs\nbcd_baw_100m.tif"
+# in_stream = r"C:\JL\Testing\solar\Riverscapes\NewRealization\Inputs\segments.gdb\segments200m"
+# in_strm_area = r"C:\JL\Testing\solar\Riverscapes\NewRealization\Inputs\NHD_area.shp"
+# workspace_temp = r"C:\JL\Testing\solar\Riverscapes\NewRealization\scratch.gdb"
+# time_config = "MultiDays   2016  182  184"
+# day_intrvl = "7"
+# hour_intrvl = "18"
+# result = r"C:\JL\Testing\solar\Riverscapes\NewRealization\Output\solar_surface.tif"
+# rs_bool = "true"
+# rs_dir = r"C:\JL\Testing\solar\Riverscapes\NewRealization\rsp"
+# rs_proj_name = "Entiat Test Project"
+# rs_real_name = "Test Run 02"
+
+
 def metadata(solarXML,
              in_dem,
              in_canopy,
@@ -30,7 +47,6 @@ def metadata(solarXML,
              day_intv,
              hour_intv,
              result,
-             wshd_name,
              real_name,
              real_id):
     """Builds and writes an XML file according to the Riverscapes Project specifications
@@ -43,15 +59,10 @@ def metadata(solarXML,
     timeStart, timeStop= solarXML.finalize()
 
     solarXML.getOperator()
-    # Add Project Meta tags
-    huc_id = rs.getHUCID(wshd_name)
-    solarXML.addMeta("HUCID", huc_id, solarXML.project)
-    solarXML.addMeta("Region", "CRB", solarXML.project)
-    solarXML.addMeta("Watershed", wshd_name, solarXML.project)
     # Add Project input tags
     solarXML.addProjectInput("Raster", "Bare earth DEM raster dataset", in_dem, solarXML.project, "DEM", solarXML.getUUID())
     # Add Realization tags
-    solarXML.addRealization(real_name, real_id, timeStop, version, solarXML.getUUID())
+    solarXML.addRealization(real_name, real_id, solarXML.project, timeStop, version, solarXML.getUUID())
     solarXML.addMeta("Operator", solarXML.operator, solarXML.project, "Solar", real_id)
     solarXML.addMeta("ComputerID", solarXML.computerID, solarXML.project, "Solar", real_id)
     solarXML.addMeta("solar_raster Start Time", timeStart, solarXML.project, "Solar", real_id)
@@ -69,7 +80,7 @@ def metadata(solarXML,
     solarXML.addRealizationInputData(solarXML.project, "Vector", "Solar", real_id, "Stream area polygon feature class", in_strm_area,
                                  solarXML.getUUID())
     # Add Analysis output tags
-    solarXML.addOutput("Raster", "Solar insolation raster dataset", result, solarXML.realizations, "Solar", real_id, "SOL_RAS",
+    solarXML.addOutput("Raster", "Solar insolation raster dataset", result, solarXML.project, "Solar", real_id, "SOL_RAS",
                        solarXML.getUUID())
     solarXML.write()
 
@@ -84,10 +95,9 @@ def main(in_dem,
          hour_intrvl,
          out_raster,
          rs_bool,
-         wshd_name='',
+         rs_dir='',
          proj_name='',
-         real_name='',
-         rs_dir=''):
+         real_name=''):
 
     # set environmental variables
     arcpy.env.outputCoordinateSystem = in_dem
@@ -127,14 +137,13 @@ def main(in_dem,
 
     # initiate Riverscapes project XML object
     if rs_bool == "true":
-        rs.writeRSRoot(rs_dir)
         rs_xml = "{0}\\{1}".format(rs_dir, "project.rs.xml")
-        projectXML = meta_rs.ProjectXML("solar_raster", rs_xml, "Solar", proj_name)
+        projectXML = meta_rs.ProjectXML("existing", rs_xml, "Solar", proj_name)
 
     # solar parameters
     sky_size = 400
 
-    # find latitude of the study basin centroid
+    # find latitude of the stream network centroid
     wgs84_prj = r"Coordinate Systems\Geographic Coordinate Systems\World\WGS 1984.prj"
     prjFile = os.path.join(arcpy.GetInstallInfo()["InstallDir"], wgs84_prj)
     temp_spRef = arcpy.SpatialReference(prjFile)
@@ -209,7 +218,6 @@ def main(in_dem,
                  day_intrvl,
                  hour_intrvl,
                  rel_solar_path,
-                 wshd_name,
                  real_name,
                  real_id)
 
@@ -225,7 +233,6 @@ def main(in_dem,
 
     return
 
-
 # if __name__ == "__main__":
 #     main(in_dem,
 #          in_canopy,
@@ -233,11 +240,10 @@ def main(in_dem,
 #          in_strm_area,
 #          workspace_temp,
 #          time_config,
-#          day_intv,
-#          hour_intv,
+#          day_intrvl,
+#          hour_intrvl,
 #          result,
 #          rs_bool,
-#          wshd_name,
+#          rs_dir,
 #          rs_proj_name,
-#          rs_real_name,
-#          rs_dir)
+#          rs_real_name)

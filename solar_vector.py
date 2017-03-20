@@ -17,6 +17,8 @@ import metadata.meta_sfr as meta_sfr
 import metadata.meta_rs as meta_rs
 import riverscapes as rs
 
+version = "0.5.4"
+
 # set environmental variables
 arcpy.CheckOutExtension("Spatial")
 arcpy.env.overwriteOutput = True
@@ -51,7 +53,7 @@ def metadata(solarXML, in_raster, in_stream, in_strm_area, out_fc, real_id):
     return
 
 
-def main(in_raster, in_stream, in_strm_indx, in_strm_area, out_fc, workspace_temp, rs_bool, rs_dir, rs_real_name):
+def main(in_raster, in_stream, in_strm_indx, in_strm_area, out_fc, workspace_temp, rs_bool, rs_dir, rs_proj, rs_real_name):
     # set environmental variables
     arcpy.env.outputCoordinateSystem = in_raster
     arcpy.env.snapRaster = in_raster
@@ -84,7 +86,7 @@ def main(in_raster, in_stream, in_strm_indx, in_strm_area, out_fc, workspace_tem
     mWriter.currentRun.addOutput("Output polyline feature class with solar values", out_fc)
     mWriter.currentRun.addOutput("Metadata XML file", out_xml)
 
-    # get OID of segmented stream network
+    # get OID field name of segmented stream network
     in_stream_oid = arcpy.Describe(in_stream).OIDFieldName
 
     if u.checkLineOID(in_stream) == True:
@@ -92,7 +94,7 @@ def main(in_raster, in_stream, in_strm_indx, in_strm_area, out_fc, workspace_tem
         # initiate Riverscapes project XML object and start processing timestamp
         if rs_bool == "true":
             rs_xml = "{0}\\{1}".format(rs_dir, "project.rs.xml")
-            projectXML = meta_rs.ProjectXML("solar_vector", rs_xml)
+            projectXML = meta_rs.ProjectXML("existing", rs_xml)
 
         # convert stream and stream area polygon to two-class raster dataset
         arcpy.AddMessage("Processing stream segments...")
