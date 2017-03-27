@@ -74,11 +74,11 @@ def metadata(solarXML,
     # Add Realization input tags
     solarXML.addRealizationInputRef(solarXML.project, "Raster", "Solar", real_id, "DEM")
     solarXML.addRealizationInputData(solarXML.project, "Raster", "Solar", real_id, "Vegetation height raster dataset", in_canopy,
-                                 solarXML.getUUID())
+                                 "VEG_HT", solarXML.getUUID())
     solarXML.addRealizationInputData(solarXML.project, "Vector", "Solar", real_id, "Stream network polyline feature class", in_stream,
-                                 solarXML.getUUID())
+                                 "STRM_LINE", solarXML.getUUID())
     solarXML.addRealizationInputData(solarXML.project, "Vector", "Solar", real_id, "Stream area polygon feature class", in_strm_area,
-                                 solarXML.getUUID())
+                                 "STRM_POLY", solarXML.getUUID())
     # Add Analysis output tags
     solarXML.addOutput("Raster", "Solar insolation raster dataset", result, solarXML.project, "Solar", real_id, "SOL_RAS",
                        solarXML.getUUID())
