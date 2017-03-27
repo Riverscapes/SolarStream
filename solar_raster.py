@@ -16,7 +16,7 @@ import metadata.meta_rs as meta_rs
 import metadata.meta_sfr as meta_sfr
 import riverscapes as rs
 
-version = "0.5.4"
+version = "0.5.5"
 
 # set environmental variables
 arcpy.CheckOutExtension("Spatial")
