@@ -22,21 +22,6 @@ version = "0.5.5"
 arcpy.CheckOutExtension("Spatial")
 arcpy.env.overwriteOutput = True
 
-# # TEST
-# in_dem = r"C:\JL\Testing\solar\Riverscapes\NewRealization\Inputs\dem_100m.tif"
-# in_canopy = r"C:\JL\Testing\solar\Riverscapes\NewRealization\Inputs\nbcd_baw_100m.tif"
-# in_stream = r"C:\JL\Testing\solar\Riverscapes\NewRealization\Inputs\segments.gdb\segments200m"
-# in_strm_area = r"C:\JL\Testing\solar\Riverscapes\NewRealization\Inputs\NHD_area.shp"
-# workspace_temp = r"C:\JL\Testing\solar\Riverscapes\NewRealization\scratch.gdb"
-# time_config = "MultiDays   2016  182  184"
-# day_intrvl = "7"
-# hour_intrvl = "18"
-# result = r"C:\JL\Testing\solar\Riverscapes\NewRealization\Output\solar_surface.tif"
-# rs_bool = "true"
-# rs_dir = r"C:\JL\Testing\solar\Riverscapes\NewRealization\rsp"
-# rs_proj_name = "Entiat Test Project"
-# rs_real_name = "Test Run 02"
-
 
 def metadata(solarXML,
              in_dem,
