@@ -11,7 +11,11 @@ It is recommended that prior to using this tool, the required stream network inp
 
 ## Download
 
-#### [Current Version (0.5.5)](https://github.com/SouthForkResearch/solar_stream/archive/master.zip) released on 3/20/2017
+#### [Current Version (0.5.7)](https://github.com/SouthForkResearch/solar_stream/archive/master.zip) released on 7/17/2017
+  * Minor bug fixes.
+
+
+#### [Previous Version (0.5.5)](#) released on 3/20/2017
   * Converted toolbox (.tbx) to Python toolbox (.pyt).
   * Refactored Riverscapes functionality to allow multiple realizations.
   * Added new Create Riverscapes Project tool.
