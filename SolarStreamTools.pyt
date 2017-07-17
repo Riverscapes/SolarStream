@@ -6,7 +6,7 @@ import solar_raster
 import solar_vector
 
 # CONSTANTS
-version = "0.5.6"
+version = "0.5.7"
 list_wshd = ['Big-Navarro-Garcia (CA)',
              'Clearwater',
              'Entiat',
@@ -17,25 +17,25 @@ list_wshd = ['Big-Navarro-Garcia (CA)',
              'Lower Selway',
              'Lemhi',
              'Lolo Creek',
-             'Lower North Fork Clearwater'
+             'Lower North Fork Clearwater',
              'Lower Salmon',
              'Lower Snake-Asotin',
              'Lower Snake-Tucannon',
              'Methow',
-             'Middle Fork Clearwater'
+             'Middle Fork Clearwater',
              'Middle Fork John Day',
              'Middle Salmon-Panther',
              'Minam',
              'North Fork John Day',
              'Okanogan',
              'Pahsimeroi',
-             'South Fork Clearwater'
+             'South Fork Clearwater',
              'South Fork Salmon',
              'Umatilla',
              'Upper Grande Ronde',
              'Upper John Day',
              'Upper Middle Fork Salmon',
-             'Upper North Fork Clearwater'
+             'Upper North Fork Clearwater',
              'Walla Walla',
              'Wenatchee',
              'Yankee Fork']
