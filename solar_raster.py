@@ -16,7 +16,7 @@ import metadata.meta_rs as meta_rs
 import metadata.meta_sfr as meta_sfr
 import riverscapes as rs
 
-version = "0.5.7"
+version = "0.5.8"
 
 # set environmental variables
 arcpy.CheckOutExtension("Spatial")
@@ -162,9 +162,7 @@ def main(in_dem,
     strm_mask.save(workspace_temp + r"\strm_mask")
     remove_strm = Con(strm_mask, 0, in_canopy, "VALUE = 1")
     remove_strm.save(workspace_temp + r"\remove_strm")
-    veg_div = Divide(remove_strm, 10.0)
-    veg_div.save(workspace_temp + r"\veg_div")
-    elev_vegtopo = Plus(veg_div, in_dem)
+    elev_vegtopo = Plus(remove_strm, in_dem)
     elev_vegtopo.save(workspace_temp + r"\elev_vegtopo")
 
     # calculate mean solar radiation per bankfull buffer
