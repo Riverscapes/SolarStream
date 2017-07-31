@@ -11,7 +11,7 @@ It is recommended that prior to using this tool, the required stream network inp
 
 ## Download
 
-#### [Current Version (0.5.8)](https://github.com/SouthForkResearch/solar_stream.git) released on 7/31/2017
+#### [Current Version (0.5.8)](https://github.com/SouthForkResearch/solar_stream/archive/master.zip) released on 7/31/2017
   * Fixed minor bug related to conversion of vegetation height.
 
 #### [Previous Version (0.5.7)](#) released on 7/17/2017
