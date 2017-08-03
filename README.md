@@ -11,12 +11,14 @@ It is recommended that prior to using this tool, the required stream network inp
 
 ## Download
 
-#### [Current Version (0.5.8)](https://github.com/SouthForkResearch/solar_stream/archive/master.zip) released on 7/31/2017
+#### [Current Version (0.5.9)](https://github.com/SouthForkResearch/solar_stream/archive/master.zip) released on 8/3/2017
+  * Minor bug fix relating to OID of shapefiles vs. file geodatabase feature classes.
+
+#### [Current Version (0.5.8)](#)
   * Fixed minor bug related to conversion of vegetation height.
 
 #### [Previous Version (0.5.7)](#) released on 7/17/2017
   * Minor bug fixes.
-
 
 #### [Previous Version (0.5.5)](#) released on 3/20/2017
   * Converted toolbox (.tbx) to Python toolbox (.pyt).
