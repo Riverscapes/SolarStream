@@ -17,7 +17,7 @@ import metadata.meta_sfr as meta_sfr
 import metadata.meta_rs as meta_rs
 import riverscapes as rs
 
-version = "0.5.7"
+version = "0.5.9"
 
 # set environmental variables
 arcpy.CheckOutExtension("Spatial")
@@ -86,9 +86,6 @@ def main(in_raster, in_stream, in_strm_indx, in_strm_area, out_fc, workspace_tem
     mWriter.currentRun.addOutput("Output polyline feature class with solar values", out_fc)
     mWriter.currentRun.addOutput("Metadata XML file", out_xml)
 
-    # get OID field name of segmented stream network
-    in_stream_oid = arcpy.Describe(in_stream).OIDFieldName
-
     if u.checkLineOID(in_stream) == True:
 
         # initiate Riverscapes project XML object and start processing timestamp
@@ -113,6 +110,9 @@ def main(in_raster, in_stream, in_strm_indx, in_strm_area, out_fc, workspace_tem
         # buffer stream segments
         seg_poly = u.divide_polygon(in_stream, poly_strm_area, workspace_temp)
         arcpy.env.extent = in_ras_extent # reset because the divide_polygon function sets it to the stream area polygon extent
+
+        # get OID field name of segmented stream network
+        in_stream_oid = arcpy.Describe(tmp_stream_line).OIDFieldName
 
         # calculate solar values per stream segment
         arcpy.AddMessage("Summarizing solar values per stream segment...")
