@@ -1,4 +1,4 @@
-### Download
+### Releases
 
 #### [Current Version (0.5.9)](https://github.com/SouthForkResearch/solar_stream/archive/master.zip) released on 8/3/2017
   * Minor bug fix relating to OID of shapefiles vs. file geodatabase feature classes.
