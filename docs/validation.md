@@ -1,4 +1,4 @@
-### Data Validation with CHaMP SunEye Measurements
+### Validation with CHaMP SunEye Measurements
 
 #### Validation Data Processing Methodology
 
