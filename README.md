@@ -1,8 +1,7 @@
 ### Solar Stream Tools
 
 Solar Stream Tools is an ArcGIS Toolbox that allows the user to model solar insolation for
-a linear stream network. For detailed documentation and help in using the tool, please visit
-[https://riverscapes.github.io/SolarStream].
+a linear stream network. For detailed documentation and help in using the tool, please visit [https://riverscapes.github.io/SolarStream](https://riverscapes.github.io/SolarStream).
 
 ### Acknowledegments
 
