@@ -1,6 +1,6 @@
 ### Releases
 
-#### [Current Version (0.5.11)](https://github.com/Riverscapes/SolarStream/docs/Downloads/SolarStream_v0.5.11.zip) released on 8/30/2017
+#### [Current Version (0.5.11)](Downloads/SolarStream_v0.5.11.zip) released on 8/30/2017
   * Revised how data inputs/outputs are named when writing Riverscapes project XML files.
 
 #### [Previous Version (0.5.10)](#) released on 8/29/2017
