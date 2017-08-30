@@ -42,7 +42,7 @@ def metadata(solarXML, in_raster, in_stream, in_strm_area, out_fc, real_id):
 
     # add Analysis output tags
     solarXML.addOutput("Vector",
-                       "Output polyline feature with solar values",
+                       "Predicted solar insolation vector",
                        out_fc,
                        solarXML.project,
                        "Solar",
@@ -117,11 +117,11 @@ def main(in_raster, in_stream, in_strm_indx, in_strm_area, out_fc, workspace_tem
         # calculate solar values per stream segment
         arcpy.AddMessage("Summarizing solar values per stream segment...")
         zstat_result = workspace_temp + "\\zstat_result"
-        ZonalStatisticsAsTable(seg_poly, "JOIN_FID", in_raster, zstat_result, "DATA", "MEAN")
+        ZonalStatisticsAsTable(seg_poly, "JOIN_FID", in_raster, zstat_result, "DATA", "MAXIMUM")
         arcpy.AddField_management("in_strm_line_lyr", "area_solar", "DOUBLE")
-        arcpy.JoinField_management("in_strm_line_lyr", in_stream_oid, zstat_result, "JOIN_FID", ["MEAN"])
-        arcpy.CalculateField_management("in_strm_line_lyr","area_solar","!MEAN!", "PYTHON_9.3")
-        arcpy.DeleteField_management("in_strm_line_lyr", ["MEAN"])
+        arcpy.JoinField_management("in_strm_line_lyr", in_stream_oid, zstat_result, "JOIN_FID", ["MAX"])
+        arcpy.CalculateField_management("in_strm_line_lyr","area_solar","!MAX!", "PYTHON_9.3")
+        arcpy.DeleteField_management("in_strm_line_lyr", ["MAX"])
         arcpy.CopyFeatures_management("in_strm_line_lyr", out_fc)
         arcpy.AddMessage("Tool output saved to " + out_fc)
 

@@ -6,7 +6,7 @@ import solar_raster
 import solar_vector
 
 # CONSTANTS
-version = "0.5.10"
+version = "0.5.11"
 list_wshd = ['Big-Navarro-Garcia (CA)',
              'Clearwater',
              'Entiat',

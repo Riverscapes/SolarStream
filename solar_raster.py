@@ -45,7 +45,7 @@ def metadata(solarXML,
 
     solarXML.getOperator()
     # Add Project input tags
-    solarXML.addProjectInput("Raster", "Bare earth DEM raster dataset", in_dem, solarXML.project, "DEM", solarXML.getUUID())
+    solarXML.addProjectInput("Raster", "Bare earth DEM", in_dem, solarXML.project, "DEM", solarXML.getUUID())
     # Add Realization tags
     solarXML.addRealization(real_name, real_id, solarXML.project, timeStop, version, solarXML.getUUID())
     solarXML.addMeta("Operator", solarXML.operator, solarXML.project, "Solar", real_id)
@@ -58,14 +58,14 @@ def metadata(solarXML,
     solarXML.addParameter("Hour interval", hour_intv, solarXML.project, "Solar", real_id)
     # Add Realization input tags
     solarXML.addRealizationInputRef(solarXML.project, "Raster", "Solar", real_id, "DEM")
-    solarXML.addRealizationInputData(solarXML.project, "Raster", "Solar", real_id, "Vegetation height raster dataset", in_canopy,
+    solarXML.addRealizationInputData(solarXML.project, "Raster", "Solar", real_id, "Vegetation height", in_canopy,
                                  "VEG_HT", solarXML.getUUID())
-    solarXML.addRealizationInputData(solarXML.project, "Vector", "Solar", real_id, "Stream network polyline feature class", in_stream,
+    solarXML.addRealizationInputData(solarXML.project, "Vector", "Solar", real_id, "Stream network", in_stream,
                                  "STRM_LINE", solarXML.getUUID())
-    solarXML.addRealizationInputData(solarXML.project, "Vector", "Solar", real_id, "Stream area polygon feature class", in_strm_area,
+    solarXML.addRealizationInputData(solarXML.project, "Vector", "Solar", real_id, "Stream area", in_strm_area,
                                  "STRM_POLY", solarXML.getUUID())
     # Add Analysis output tags
-    solarXML.addOutput("Raster", "Solar insolation raster dataset", result, solarXML.project, "Solar", real_id, "SOL_RAS",
+    solarXML.addOutput("Raster", "Predicted solar insolation raster", result, solarXML.project, "Solar", real_id, "SOL_RAS",
                        solarXML.getUUID())
     solarXML.write()
 
