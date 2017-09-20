@@ -1,13 +1,13 @@
-## Using the Solar Stream Tools
+### Using the Solar Stream Tools
 
-### Data Input Requirements:
+#### Data Input Requirements:
 
 * NHD+ 1:24k flowlines, segmented
 * DEM 10m<sup>2</sup> raster dataset
 * Stream area polygon dataset (i.e. bankfull or USGS NHD Area)
 * NBDC canopy height raster dataset
 
-### Suggested User Workflow
+#### Suggested User Workflow
 
 1. Clip all data inputs using a watershed or hydrologic unit polygon
 2. Convert all inputs to the same projected coordinate systems.
