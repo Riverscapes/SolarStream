@@ -15,6 +15,9 @@ methods for modeling solar insolation of streams in the Columbia Basin. Specific
 seeks to develop a methodology for modeling solar insolation that will more closely emulate 
 the effects of shading from riparian vegetation and topography.
 
+![solar_example]({{site.baseurl}}/images/solar_SummaryFig.png)
+
+
 The [Columbia Habitat Monitoring Program](https://www.champmonitoring.org/) (CHaMP) protocol 
 requires the collection of solar insolation data during stream surveys, however, collecting 
 field-based solar insolation measurements comprehensively for the entire stream network of 
