@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Metadata metadata_version="0.3" script_version="0.3" type="SFR Processing">
+  <Tool>
+    <Name>Calculate Solar Insolation for a Stream Network</Name>
+    <Version>0.5.4</Version>
+  </Tool>
+  <Processing>
+    <ComputerID>SFR_Processor</ComputerID>
+    <Operator>SFR_Admin</Operator>
+    <Runs>
+      <Run status="Success">
+        <TimeStart>2017-04-12T10:50:27</TimeStart>
+        <TimeStop>2017-04-12T21:49:10</TimeStop>
+        <TotalProcessingTime>39522.518</TotalProcessingTime>
+        <Parameters>
+          <Parameter>
+            <Name>DEM raster</Name>
+            <Value>C:\SFR\Arielle\Projects\solar\Minam\_1Sources\ned10m_minam.tif</Value>
+          </Parameter>
+          <Parameter>
+            <Name>Canopy height raster</Name>
+            <Value>C:\SFR\Arielle\Projects\solar\Minam\_1Sources\nbdc_baw.tif</Value>
+          </Parameter>
+          <Parameter>
+            <Name>Stream network feature class</Name>
+            <Value>C:\SFR\Arielle\Projects\solar\Minam\_1Sources\seg200m.gdb\seg200m_20170108</Value>
+          </Parameter>
+          <Parameter>
+            <Name>Stream area polygon feature class</Name>
+            <Value>C:\SFR\Arielle\Projects\solar\Minam\_1Sources\NHD_Area.shp</Value>
+          </Parameter>
+          <Parameter>
+            <Name>Scratch workspace</Name>
+            <Value>C:\SFR\Arielle\Projects\solar\Minam\scratch.gdb</Value>
+          </Parameter>
+          <Parameter>
+            <Name>Time configuration</Name>
+            <Value>MultiDays   2016  182  243</Value>
+          </Parameter>
+          <Parameter>
+            <Name>Day interval</Name>
+            <Value>7</Value>
+          </Parameter>
+          <Parameter>
+            <Name>Hour interval</Name>
+            <Value>2</Value>
+          </Parameter>
+        </Parameters>
+        <Outputs>
+          <Output>
+            <Name>Output solar raster dataset</Name>
+            <Value>C:\SFR\Arielle\Projects\solar\Minam\_2Model\area_solar.tif</Value>
+          </Output>
+          <Output>
+            <Name>Metadata XML file</Name>
+            <Value>C:\SFR\Arielle\Projects\solar\Minam\_2Model\meta_solarRaster_201704121050.xml</Value>
+          </Output>
+        </Outputs>
+        <Messages />
+        <Results />
+      </Run>
+    </Runs>
+  </Processing>
+</Metadata>

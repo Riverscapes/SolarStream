@@ -1,0 +1,118 @@
+<?xml version="1.0" ?>
+<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Riverscapes/Program/master/Project/XSD/V1/Project.xsd">
+	<Name>
+		Minam Solar 2016
+	</Name>
+	<ProjectType>
+		Solar
+	</ProjectType>
+	<MetaData>
+		<Meta name="HUCID">
+			1706010505
+		</Meta>
+		<Meta name="Region">
+			CRB
+		</Meta>
+		<Meta name="Watershed">
+			Minam
+		</Meta>
+	</MetaData>
+	<Inputs>
+		<Raster guid="68FAA767-C683-4C6F-9FE6-777504133797" id="DEM">
+			<Name>
+				Bare earth DEM raster dataset
+			</Name>
+			<Path>
+				ProjectInputs\ned10m_minam.tif
+			</Path>
+		</Raster>
+	</Inputs>
+	<Realizations>
+		<Solar dateCreated="2017-04-12T21:49:10.072000" guid="168DB1A7-89DD-4EB7-B871-9F09D1ABA166" id="run201704121050" productVersion="0.5.4">
+			<Name>
+				NBCD 2016-182-243 Run
+			</Name>
+			<MetaData>
+				<Meta name="Operator">
+					SFR_Admin
+				</Meta>
+				<Meta name="ComputerID">
+					SFR_Processor
+				</Meta>
+				<Meta name="solar_raster Start Time">
+					2017-04-12T10:50:27.569000
+				</Meta>
+				<Meta name="solar_raster Stop Time">
+					2017-04-12T21:49:10.072000
+				</Meta>
+				<Meta name="solar_vector Start Time">
+					2017-04-13T15:32:40.771000
+				</Meta>
+				<Meta name="solar_vector Stop Time">
+					2017-04-13T15:50:18.353000
+				</Meta>
+			</MetaData>
+			<Parameters>
+				<Param name="Time configuration">
+					MultiDays   2016  182  243
+				</Param>
+				<Param name="Day interval">
+					7
+				</Param>
+				<Param name="Hour interval">
+					2
+				</Param>
+			</Parameters>
+			<Inputs>
+				<Raster ref="DEM"/>
+				<Raster guid="E2DAFA75-F35C-4475-9CC0-46A11E24D172">
+					<Name>
+						Vegetation height raster dataset
+					</Name>
+					<Path>
+						Realizations\run201704121050\Inputs\nbdc_baw.tif
+					</Path>
+				</Raster>
+				<Vector guid="E8290F45-F40D-485C-95D5-30F11822B224">
+					<Name>
+						Stream network polyline feature class
+					</Name>
+					<Path>
+						Realizations\run201704121050\Inputs\seg200m_20170108
+					</Path>
+				</Vector>
+				<Vector guid="E8EA07EA-468F-4326-8CA9-1FE0745029CC">
+					<Name>
+						Stream area polygon feature class
+					</Name>
+					<Path>
+						Realizations\run201704121050\Inputs\NHD_Area.shp
+					</Path>
+				</Vector>
+				<Raster ref="SOL_RAS"/>
+			</Inputs>
+			<Analyses>
+				<Analysis>
+					<Outputs>
+						<Raster guid="D5D80FC4-B8AD-4E75-823F-EF9E41B6F690" id="SOL_RAS">
+							<Name>
+								Solar insolation raster dataset
+							</Name>
+							<Path>
+								Realizations\run201704121050\SolarRasterOutput\area_solar.tif
+							</Path>
+						</Raster>
+						<Vector guid="6B0D1031-0017-4397-9CB4-D5FC8ACD3AD4" id="PRED_SOLAR">
+							<Name>
+								Output polyline feature with solar values
+							</Name>
+							<Path>
+								Realizations\run201704121050\SolarVectorOutput\pred_solar.shp
+							</Path>
+						</Vector>
+					</Outputs>
+				</Analysis>
+			</Analyses>
+		</Solar>
+	</Realizations>
+</Project>
